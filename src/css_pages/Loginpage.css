@@ -1,0 +1,316 @@
+:root {
+  /* === Primary Brand Colors === */
+  --primary: #16a34a;
+  --primary-light: #86efac;
+  --primary-dark: #166534;
+
+  /* === Secondary & Support === */
+  --secondary: #10b981;
+  --accent: #22c55e;
+  --warning: #facc15;
+  --danger: #dc2626;
+
+  /* === Neutral / Background === */
+  --bg: #f9fafb;
+  --card-bg: #ffffff;
+  --border: #e5e7eb;
+
+  /* === Text === */
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+
+  /* === Sidebar === */
+  --sidebar-bg: #292831;
+  --sidebar-active: #16a34a;
+  --sidebar-hover: #15803d;
+}
+
+.containerbody {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.container {
+  position: relative;
+  display: flex;
+  width: 850px;
+  height: 550px;
+  border-radius: 30px;
+  border: 2px solid var(--border);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+}
+
+.form-box {
+  position: absolute;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #333;
+  text-align: center;
+  z-index: 1;
+  border-radius: 0px 30px 30px 0px;
+  background-color: var(--accent);
+}
+
+.form-box form {
+  width: 100%;
+  padding: 40px;
+}
+
+.container h1 {
+  font-size: 40px;
+  margin: -10px 0;
+}
+
+.container p {
+  font-size: 14.5px;
+  margin: 1px 0;
+}
+
+.input-group {
+  position: relative;
+  margin: 30px 0;
+  text-align: left;
+}
+
+/* Visually hidden labels — accessible but not visible */
+.input-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.input-group input {
+  position: relative;
+  width: 100%;
+  padding: 13px 45px 13px 20px;
+  background: #eee;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  color: var(--text-primary);
+  font-weight: 500;
+  box-sizing: border-box;
+}
+
+.input-group input::placeholder {
+  color: #888;
+  font-weight: 400;
+}
+
+.input-group .input-icon {
+  position: absolute;
+  right: 20px;
+  /* Align icon vertically within the input field itself */
+  bottom: 13px;
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+/* Password toggle button */
+.input-group .toggle-password {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.input-group .toggle-password:hover {
+  color: var(--text-primary);
+}
+
+.forgot-link {
+  margin: -15px 0 15px;
+  text-align: right;
+}
+
+/* Using a button styled as a link — avoids dead href="#" */
+.forgot-link button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14.5px;
+  color: var(--sidebar-bg);
+  text-decoration: none;
+  padding: 0;
+}
+
+.forgot-link button:hover {
+  text-decoration: underline;
+}
+
+.btn-login {
+  width: 100%;
+  height: 48px;
+  background: var(--primary-light);
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--text-primary);
+  font-weight: 600;
+  transition: opacity 0.2s, transform 0.1s;
+
+  /* FIX ALIGNMENT */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Fix: disabled state now visually communicates loading */
+.btn-login:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-login:not(:disabled):hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-login:not(:disabled):active {
+  transform: translateY(0);
+}
+
+.left-side {
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  border-radius: 30px;
+}
+
+.Logo {
+  background-color: var(--primary-light);
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px 0px 0px 30px;
+}
+
+/* Fix: scoped to .Logo img to avoid bleeding into other components */
+.Logo img {
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 60%;
+  height: 60%;
+}
+
+.login-error {
+  background: #fee2e2;
+  border: 1px solid #fca5a5;
+  color: #dc2626;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+/* Tablet */
+@media (max-width: 992px) {
+  .container {
+    width: 95%;
+    height: auto;
+    min-height: 500px;
+  }
+
+  .form-box {
+    width: 50%;
+  }
+
+  .left-side {
+    width: 50%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    height: auto;
+    flex-direction: column;
+    border-radius: 20px;
+  }
+
+  .left-side,
+  .form-box {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+  }
+
+  .Logo {
+    border-radius: 20px 20px 0 0;
+    padding: 30px 0;
+  }
+
+  .form-box {
+    border-radius: 0 0 20px 20px;
+    padding: 20px 0;
+  }
+
+  /* Fix: scoped selector instead of bare `form` */
+  .form-box form {
+    padding: 20px;
+  }
+
+  .container h1 {
+    font-size: 28px;
+  }
+
+  .input-group input {
+    font-size: 16px;
+    /* Fix: was `12px 45px 12px px` — missing value corrected */
+    padding: 12px 45px 12px 20px;
+  }
+
+  .Logo img {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* Very Small Phones */
+@media (max-width: 480px) {
+  .container {
+    width: 95%;
+  }
+
+  .container h1 {
+    font-size: 24px;
+  }
+
+  .container p {
+    font-size: 13px;
+  }
+
+  .btn-login {
+    height: 45px;
+    font-size: 14px;
+  }
+}

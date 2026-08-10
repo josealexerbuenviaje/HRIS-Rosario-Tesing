@@ -1,0 +1,1165 @@
+/* ── ContentArea.css — Leave Management ────────────────────────────────────────
+   All original class names preserved. Only values & new additions enhanced.
+   ─────────────────────────────────────────────────────────────────────────── */
+   @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+   :root {
+     /* === Primary Brand Colors === */
+     --primary:        #16a34a;
+     --primary-light:  #dcfce7;
+     --primary-dark:   #166534;
+   
+     /* === Secondary & Support === */
+     --secondary:  #10b981;
+     --accent:     #22c55e;
+     --warning:    #fbbf24;
+     --danger:     #ef4444;
+     --danger-dark:#dc2626;
+   
+     /* === Neutral / Background === */
+     --bg:       #f8fafc;
+     --card-bg:  #ffffff;
+     --border:   #e2e8f0;
+   
+     /* === Text === */
+     --text-primary:   #0f172a;
+     --text-secondary: #64748b;
+     --text-muted:     #94a3b8;
+   
+     /* === Misc === */
+     --shadow:     0 1px 3px rgba(0,0,0,.06), 0 4px 16px rgba(0,0,0,.04);
+     --shadow-md:  0 4px 20px rgba(0,0,0,.08);
+     --radius:     12px;
+     --font:       'Plus Jakarta Sans', sans-serif;
+   }
+   
+   /* ── Page containers (kept as-is, just font added) ─────────────────────────── */
+   .leave-page, .Plantilla-page, .Recruitment-page, .Payroll-page {
+     height: auto;
+     display: flex;
+     flex-direction: column;
+     max-height: 95vh;
+     font-family: var(--font);
+   }
+   
+   /* ── Content Area ────────────────────────────────────────────────────────────── */
+   .content-area {
+     flex: 1;
+     padding: 24px;
+     background-color: var(--bg);
+     color: var(--text-primary);
+     overflow-y: auto;
+     font-family: var(--font);
+   }
+   
+   /* ── Tab Bar ─────────────────────────────────────────────────────────────────── */
+   .tabs {
+     display: flex;
+     gap: 4px;
+     margin-bottom: 20px;
+     background: var(--card-bg);
+     border: 1.5px solid var(--border);
+     border-radius: var(--radius);
+     padding: 6px;
+     box-shadow: var(--shadow);
+     flex-wrap: wrap;
+     /* removed border-bottom override from original */
+   }
+   
+   .tabs button {
+     padding: 9px 18px;
+     background: transparent;
+     border: none;
+     cursor: pointer;
+     font-size: 13.5px;
+     font-weight: 600;
+     font-family: var(--font);
+     color: var(--text-secondary);
+     border-radius: 8px;
+     transition: all 0.15s ease;
+     flex: 1;
+     text-align: center;
+     white-space: nowrap;
+   }
+   
+   .tabs button:hover {
+     background-color: var(--primary-light);
+     color: var(--primary-dark);
+   }
+   
+   .tabs button.active {
+     background-color: var(--primary);
+     color: #ffffff;
+     font-weight: 700;
+     box-shadow: 0 2px 8px rgba(22,163,74,.25);
+   }
+   
+   .tabs button:focus {
+     outline: 2px solid var(--primary);
+     outline-offset: 2px;
+   }
+   
+   /* ── Tab Content Card ────────────────────────────────────────────────────────── */
+   .tab-content {
+     background: var(--card-bg);
+     padding: 28px;
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     border: 1.5px solid var(--border);
+     overflow-y: auto;
+     animation: ca-fade 0.18s ease;
+   }
+   
+   @keyframes ca-fade {
+     from { opacity: 0; transform: translateY(6px); }
+     to   { opacity: 1; transform: translateY(0); }
+   }
+   
+   .tab-content h2 {
+     margin: 0 0 6px;
+     color: var(--text-primary);
+     font-size: 20px;
+     font-weight: 800;
+     letter-spacing: -0.3px;
+   }
+   
+   .tab-content h3 {
+     font-size: 15px;
+     font-weight: 700;
+     color: var(--text-primary);
+     margin: 28px 0 12px;
+   }
+   
+   .tab-content p {
+     color: var(--text-secondary);
+     margin-bottom: 20px;
+     font-size: 13.5px;
+     line-height: 1.6;
+   }
+   
+   /* ── Forms ───────────────────────────────────────────────────────────────────── */
+   .leave-form, .report-form, .job-form, .appointment-form, .salary-form,
+   .deduction-form, .position-form, .evaluation-form, .goal-form,.review-form,
+   .feedback-form, .report-generate-form,.applicant-form,.result-form,.training-form {
+     display: flex;
+     flex-direction: column;
+     gap: 14px;
+     margin-bottom: 28px;
+     max-width: 640px;
+   }
+   
+   .leave-form label, .report-form label, .job-form label, .appointment-form label,
+   .salary-form label, .deduction-form label, .position-form label,
+   .evaluation-form label, .goal-form label, .feedback-form label,.review-form label,
+   .report-generate-form label,.applicant-form label,.result-form label,.training-form label {
+     font-weight: 600;
+     font-size: 12.5px;
+     color: var(--text-secondary);
+     text-transform: uppercase;
+     letter-spacing: 0.05em;
+     margin-bottom: -8px;
+   }
+   
+   .leave-form input, .leave-form select, .leave-form textarea,
+   .report-form input, .report-form select,
+   .job-form input, .job-form select, .job-form textarea,
+   .appointment-form input, .appointment-form select, .appointment-form textarea,
+   .applicant-form input,.applicant-form select,.applicant-form textarea,.applicant-form select ,
+   .result-form input,.result-form select,.result-form textarea,.result-form select,
+   .salary-form input, .salary-form select,
+   .deduction-form input, .deduction-form select,
+   .position-form input, .position-form select,
+   .evaluation-form input, .evaluation-form select, .evaluation-form textarea,
+   .goal-form input, .goal-form select,.review-form input,.review-form select, .goal-form textarea,.review-form textarea,
+   .feedback-form input, .feedback-form select, .feedback-form textarea,
+   .report-generate-form input, .report-generate-form select,
+   .training-form input,.training-form select,.training-form textarea {
+     padding: 10px 14px;
+     border: 1.5px solid var(--border);
+     border-radius: 9px;
+     background-color: var(--bg);
+     color: var(--text-primary);
+     font-size: 13.5px;
+     font-family: var(--font);
+     transition: border-color 0.15s, box-shadow 0.15s;
+   }
+   
+   .leave-form textarea {
+     min-height: 100px;
+     resize: vertical;
+     line-height: 1.6;
+   }
+   
+   .leave-form input:focus, .leave-form select:focus, .leave-form textarea:focus,
+   .report-form input:focus, .report-form select:focus,
+   .job-form input:focus, .job-form select:focus, .job-form textarea:focus,
+   .appointment-form input:focus, .appointment-form select:focus,
+   textarea:focus, .salary-form input:focus, .salary-form select:focus,
+   .deduction-form input:focus, .deduction-form select:focus,
+   .position-form input:focus, .position-form select:focus,
+   .evaluation-form input:focus, .evaluation-form select:focus, .evaluation-form textarea:focus,
+   .goal-form input:focus, .goal-form select:focus,.review-form select:focus, .goal-form textarea:focus,.review-form textarea:focus,
+   .feedback-form input:focus, .feedback-form select:focus, .feedback-form textarea:focus,
+   .report-generate-form input:focus, .report-generate-form select:focus,.applicant-form select:focus,
+   .training-form input:focus,.training-form select:focus,.training-form textarea:focus {
+     outline: none;
+     border-color: var(--primary);
+     box-shadow: 0 0 0 3px rgba(22,163,74,.12);
+     background: var(--card-bg);
+   }
+   
+   /* ── Buttons ─────────────────────────────────────────────────────────────────── */
+   .leave-form button, .report-form button, .job-form button, .appointment-form button,
+   .custom-btn button, .export-options button, .data-table button, .salary-form button,
+   .deduction-form button, .position-form button, .evaluation-form button,
+   .goal-form button,.review-form button, .feedback-form button, .report-generate-form button,
+   .applicant-form button,.result-form button,.training-form button {
+     padding: 10px 20px;
+     background-color: var(--primary);
+     color: #ffffff;
+     border: none;
+     border-radius: 9px;
+     cursor: pointer;
+     font-size: 13px;
+     font-weight: 600;
+     font-family: var(--font);
+     transition: background-color 0.15s, transform 0.1s, box-shadow 0.15s;
+     align-self: flex-start;
+     letter-spacing: 0.01em;
+   }
+   
+   .data-table button, .custom-btn button {
+     padding: 7px 14px;
+     font-size: 12px;
+   }
+   
+   .leave-form button:hover, .report-form button:hover, .job-form button:hover,
+   .appointment-form button:hover, .custom-btn button:hover, .export-options button:hover,
+   .data-table button:hover, .salary-form button:hover, .deduction-form button:hover,
+   .position-form button:hover, .evaluation-form button:hover, .goal-form button:hover,.review-form button:hover,
+   .feedback-form button:hover,
+   .report-generate-form button:hover,
+   .applicant-form button:hover,.result-form button:hover,
+   .training-form button:hover {
+     background-color: var(--primary-dark);
+     box-shadow: 0 2px 8px rgba(22,163,74,.3);
+   }
+   
+   .leave-form button:focus, .report-form button:focus, .job-form button:focus,
+   .data-table button:focus, .report-generate-form button:focus,.training-form button:focus {
+     outline: 2px solid var(--primary);
+     outline-offset: 2px;
+   }
+   
+   /* Secondary & danger button variants */
+   .btn-secondary {
+     background-color: var(--bg) !important;
+     color: var(--text-primary) !important;
+     border: 1.5px solid var(--border) !important;
+   }
+   .btn-secondary:hover {
+     background-color: #f1f5f9 !important;
+     box-shadow: none !important;
+   }
+   .btn-danger {
+     background-color: #fef2f2 !important;
+     color: var(--danger-dark) !important;
+     border: 1.5px solid #fecaca !important;
+   }
+   .btn-danger:hover {
+     background-color: var(--danger) !important;
+     color: #fff !important;
+     border-color: var(--danger) !important;
+     box-shadow: none !important;
+   }
+   
+   /* Approve / Reject inline buttons */
+   .btn-approve {
+     background-color: var(--primary-light) !important;
+     color: var(--primary-dark) !important;
+     border: 1.5px solid #bbf7d0 !important;
+   }
+   .btn-approve:hover {
+     background-color: var(--primary) !important;
+     color: #fff !important;
+     border-color: var(--primary) !important;
+   }
+   .btn-reject {
+     background-color: #fef2f2 !important;
+     color: var(--danger-dark) !important;
+     border: 1.5px solid #fecaca !important;
+   }
+   .btn-reject:hover {
+     background-color: var(--danger) !important;
+     color: #fff !important;
+     border-color: var(--danger) !important;
+   }
+   
+   /* ── Status badges (new, additive) ──────────────────────────────────────────── */
+   .status-badge {
+     display: inline-flex;
+     align-items: center;
+     gap: 5px;
+     padding: 3px 10px;
+     border-radius: 20px;
+     font-size: 11.5px;
+     font-weight: 600;
+   }
+   .status-badge::before {
+     content: "";
+     width: 6px; height: 6px;
+     border-radius: 50%;
+     background: currentColor;
+     opacity: 0.7;
+   }
+   .status-pending  { background: #fef3c7; color: #92400e; }
+   .status-approved { background: #dcfce7; color: #166534; }
+   .status-rejected { background: #fee2e2; color: #991b1b; }
+   
+   /* ── Approval buttons row ────────────────────────────────────────────────────── */
+   .approval-btn, .export-options {
+     display: flex;
+     gap: 6px;
+     flex-wrap: wrap;
+   }
+   
+   .custom-btn, .export-options {
+     margin-top: 12px;
+   }
+   
+   /* ── Report preview ──────────────────────────────────────────────────────────── */
+   .report-preview {
+     margin-top: 20px;
+     padding: 16px;
+     background-color: var(--bg);
+     border-radius: 10px;
+     border: 1.5px solid var(--border);
+   }
+   
+   /* ── Data Table ──────────────────────────────────────────────────────────────── */
+   .data-table {
+     width: 100%;
+     border-collapse: collapse;
+     margin-top: 16px;
+     background-color: var(--card-bg);
+     border-radius: 10px;
+     overflow: hidden;
+     box-shadow: var(--shadow);
+     border: 1.5px solid var(--border);
+     font-size: 13.5px;
+   }
+   
+   .data-table th, .data-table td {
+     padding: 12px 16px;
+     text-align: left;
+     color: var(--text-primary);
+     border-bottom: 1px solid var(--border);
+   }
+   
+   .data-table th {
+     background-color: #f8fafc;
+     font-weight: 700;
+     font-size: 11px;
+     text-transform: uppercase;
+     letter-spacing: 0.07em;
+     color: var(--text-secondary);
+     border-bottom: 2px solid var(--border);
+   }
+   
+   .data-table tbody tr:last-child td { border-bottom: none; }
+   
+   .data-table tbody tr {
+     transition: background-color 0.12s;
+   }
+   
+   .data-table tbody tr:hover {
+     background-color: #f0fdf4;
+   }
+   
+   /* ── Filters ─────────────────────────────────────────────────────────────────── */
+   .filters {
+     display: flex;
+     gap: 10px;
+     margin-bottom: 20px;
+     align-items: center;
+     flex-wrap: wrap;
+   }
+   
+   .filters input, .filters select {
+     padding: 9px 12px;
+     border: 1.5px solid var(--border);
+     border-radius: 9px;
+     background-color: var(--card-bg);
+     color: var(--text-primary);
+     font-family: var(--font);
+     font-size: 13px;
+     outline: none;
+     transition: border-color 0.15s;
+   }
+   .filters input:focus, .filters select:focus {
+     border-color: var(--primary);
+     box-shadow: 0 0 0 3px rgba(22,163,74,.1);
+   }
+   
+   /* ── Bulk Actions ────────────────────────────────────────────────────────────── */
+   .bulk-actions {
+     margin-top: 20px;
+     display: flex;
+     align-items: center;
+     gap: 12px;
+     padding: 12px 16px;
+     background: var(--bg);
+     border: 1.5px solid var(--border);
+     border-radius: 10px;
+     flex-wrap: wrap;
+   }
+   
+   .bulk-actions label {
+     font-size: 13px;
+     font-weight: 500;
+     color: var(--text-secondary);
+   }
+   
+   .bulk-actions button {
+     padding: 8px 14px;
+     background-color: var(--primary);
+     color: #fff;
+     border: none;
+     border-radius: 8px;
+     cursor: pointer;
+     font-size: 13px;
+     font-weight: 600;
+     font-family: var(--font);
+     transition: background-color 0.15s;
+   }
+   
+   .bulk-actions button:hover {
+     background-color: var(--primary-dark);
+   }
+   
+   /* ── Details/Summary ─────────────────────────────────────────────────────────── */
+   details {
+     margin-top: 20px;
+     border: 1.5px solid var(--border);
+     border-radius: 10px;
+     overflow: hidden;
+   }
+   details summary {
+     padding: 12px 16px;
+     font-size: 13.5px;
+     font-weight: 600;
+     color: var(--text-primary);
+     cursor: pointer;
+     background: var(--bg);
+     user-select: none;
+     list-style: none;
+     display: flex;
+     align-items: center;
+     gap: 8px;
+   }
+   details summary::before {
+     content: "▸";
+     color: var(--primary);
+     font-size: 12px;
+     transition: transform 0.15s;
+   }
+   details[open] summary::before { transform: rotate(90deg); }
+   details > p { padding: 16px; margin: 0; font-size: 13px; color: var(--text-secondary); }
+   
+   /* ── Payroll ─────────────────────────────────────────────────────────────────── */
+   .payroll-run {
+     display: flex;
+     flex-direction: column;
+     gap: 14px;
+     margin-bottom: 20px;
+   }
+   .payroll-run select {
+     padding: 10px 14px;
+     border: 1.5px solid var(--border);
+     border-radius: 9px;
+     font-size: 13.5px;
+     font-family: var(--font);
+     background-color: var(--card-bg);
+     color: var(--text-primary);
+     outline: none;
+   }
+   .payroll-run button {
+     padding: 10px 20px;
+     background-color: var(--secondary);
+     color: #fff;
+     border: none;
+     border-radius: 9px;
+     cursor: pointer;
+     font-size: 13px;
+     font-weight: 600;
+     font-family: var(--font);
+     align-self: flex-start;
+     transition: background-color 0.15s;
+   }
+   .payroll-run button:hover { background-color: var(--primary-dark); }
+   
+   /* ── Calendar ────────────────────────────────────────────────────────────────── */
+   .calendar-controls {
+     display: flex;
+     gap: 10px;
+     margin-bottom: 20px;
+     align-items: center;
+     flex-wrap: wrap;
+   }
+   .calendar-controls select {
+     padding: 9px 12px;
+     border: 1.5px solid var(--border);
+     border-radius: 9px;
+     font-family: var(--font);
+     font-size: 13px;
+     background-color: var(--card-bg);
+     color: var(--text-primary);
+     outline: none;
+     cursor: pointer;
+   }
+   
+   .calendar-grid {
+     display: grid;
+     grid-template-columns: repeat(7, 1fr);
+     border: 1.5px solid var(--border);
+     border-radius: 10px;
+     overflow: hidden;
+     background: var(--card-bg);
+     box-shadow: var(--shadow);
+     width: 100%;
+   }
+   
+   /* Day name header cells */
+   .cal-header-cell {
+     padding: 12px 8px;
+     text-align: center;
+     font-weight: 700;
+     font-size: 12px;
+     text-transform: uppercase;
+     letter-spacing: 0.06em;
+     color: #86efac;
+     background: linear-gradient(135deg, #14532d 0%, #166534 100%);
+     border-right: 1px solid rgba(255,255,255,0.08);
+   }
+   .cal-header-cell:last-child { border-right: none; }
+   
+   /* Day cells */
+   .day {
+     min-height: 90px;
+     padding: 8px;
+     border-right: 1px solid var(--border);
+     border-bottom: 1px solid var(--border);
+     font-size: 13px;
+     color: var(--text-primary);
+     font-weight: 500;
+     box-sizing: border-box;
+     overflow: hidden;
+     transition: background-color 0.12s;
+   }
+   .day:nth-child(7n) { border-right: none; }
+   .day:hover { background-color: #f0fdf4; cursor: default; }
+   .day--empty {
+     background-color: #fafafa;
+     border-right: 1px solid var(--border);
+     border-bottom: 1px solid var(--border);
+   }
+   .day--empty:nth-child(7n) { border-right: none; }
+   .day--has-leave { background-color: #f0fdf4; }
+   .day--today .day-num {
+     background: var(--primary);
+     color: #fff;
+     border-radius: 50%;
+     width: 24px; height: 24px;
+     display: inline-flex;
+     align-items: center;
+     justify-content: center;
+     font-size: 12px;
+   }
+   .day.holiday { background-color: #fef3c7; }
+   
+   /* Calendar enhancements */
+   .day-num {
+     font-weight: 700;
+     font-size: 13px;
+     margin-bottom: 4px;
+     display: block;
+     color: var(--text-primary);
+   }
+   .cal-leave-chip {
+     font-size: 10.5px;
+     background: #dcfce7;
+     color: #15803d;
+     border-radius: 4px;
+     padding: 2px 5px;
+     margin-bottom: 2px;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     display: block;
+   }
+   .cal-more { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+   
+   .legend {
+     display: flex;
+     gap: 12px;
+     margin: 16px 0;
+     flex-wrap: wrap;
+     align-items: center;
+   }
+   .legend-item {
+     padding: 4px 12px;
+     border-radius: 20px;
+     font-size: 12px;
+     font-weight: 600;
+     color: var(--text-primary);
+   }
+   .legend-item.your-leave  { background-color: var(--primary-light); color: var(--primary-dark); }
+   .legend-item.team-leave  { background-color: #dbeafe; color: #1e40af; }
+   .legend-item.holiday     { background-color: #fef3c7; color: #92400e; }
+   
+   /* ── Leave Balances ──────────────────────────────────────────────────────────── */
+   .balances {
+     display: flex;
+     gap: 16px;
+     margin-bottom: 24px;
+     flex-wrap: wrap;
+   }
+   .balance-card {
+     background: var(--card-bg);
+     padding: 20px 24px;
+     border-radius: var(--radius);
+     border: 1.5px solid var(--border);
+     box-shadow: var(--shadow);
+     flex: 1;
+     min-width: 180px;
+     text-align: center;
+     transition: transform 0.15s, box-shadow 0.15s;
+     border-top: 3px solid var(--primary);
+   }
+   .balance-card:hover {
+     transform: translateY(-2px);
+     box-shadow: var(--shadow-md);
+   }
+   .balance-card h3 {
+     margin: 0 0 10px;
+     color: var(--primary-dark);
+     font-size: 14px;
+     font-weight: 700;
+     text-transform: uppercase;
+     letter-spacing: 0.05em;
+   }
+   .balance-card p {
+     color: var(--text-secondary);
+     margin: 0;
+     font-size: 13.5px;
+     line-height: 1.5;
+   }
+   
+   /* ── Responsive ──────────────────────────────────────────────────────────────── */
+   @media (max-width: 768px) {
+     .content-area { padding: 16px; }
+     .tab-content  { padding: 18px; }
+     .tabs {
+       flex-direction: row;
+       overflow-x: auto;
+       flex-wrap: nowrap;
+       gap: 2px;
+     }
+     .tabs button { flex: none; font-size: 12.5px; padding: 8px 14px; }
+     .balances { flex-direction: column; }
+     .filters, .calendar-controls { flex-direction: column; align-items: stretch; }
+     .legend { justify-content: center; }
+     .leave-form, .report-form { max-width: 100%; }
+   }
+   
+   /* ── API message ─────────────────────────────────────────────────────────────── */
+   .api-msg {
+     padding: 10px 14px; border-radius: 8px;
+     font-size: 13px; font-weight: 500; margin-bottom: 14px;
+   }
+   .api-msg--success { background:#dcfce7; border:1px solid #bbf7d0; color:#15803d; }
+   .api-msg--error   { background:#fee2e2; border:1px solid #fecaca; color:#dc2626; }
+   
+   /* ── Status badges ───────────────────────────────────────────────────────────── */
+   .status-approved  { background:#dcfce7; color:#15803d; }
+   .status-rejected  { background:#fee2e2; color:#dc2626; }
+   .status-cancelled { background:#f1f5f9; color:#64748b; }
+   
+   /* ── Employee search dropdown ────────────────────────────────────────────────── */
+   .emp-search-wrap { position: relative; }
+   .emp-dropdown {
+     position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+     background: #fff; border: 1.5px solid var(--border);
+     border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.1);
+     max-height: 220px; overflow-y: auto;
+   }
+   .emp-option {
+     padding: 10px 14px; cursor: pointer;
+     border-bottom: 1px solid #f1f5f9;
+     transition: background .1s;
+   }
+   .emp-option:hover { background: #f8fafc; }
+   .emp-option:last-child { border-bottom: none; }
+   .emp-option-name { display: block; font-weight: 600; font-size: 13px; color: var(--text-primary); }
+   .emp-option-meta { display: block; font-size: 11.5px; color: var(--text-muted); margin-top: 2px; }
+   .emp-selected-badge {
+     margin-top: 6px; padding: 8px 12px;
+     background: #f0fdf4; border: 1.5px solid #bbf7d0;
+     border-radius: 8px; font-size: 13px; color: #15803d; font-weight: 500;
+   }
+   
+   /* ── Credits table ───────────────────────────────────────────────────────────── */
+   .credits-table th, .credits-table td { white-space: nowrap; }
+   .credit-group { text-align: center; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; }
+   .credit-group--annual   { background: #eff6ff; color: #1d4ed8; border-top: 3px solid #3b82f6; }
+   .credit-group--sick     { background: #fefce8; color: #92400e; border-top: 3px solid #f59e0b; }
+   .credit-group--maternity{ background: #fdf2f8; color: #9d174d; border-top: 3px solid #ec4899; }
+   .credit-sub { text-align: center; font-size: 11px; color: var(--text-muted); }
+   
+   /* ── Legend ──────────────────────────────────────────────────────────────────── */
+
+   /* ── Tab header row (title + add button) ─────────────────────────────────────── */
+.plt-tab-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+.plt-tab-header h2 { margin: 0; }
+.plt-tab-header p  { margin: 4px 0 0; font-size: 13px; color: #64748b; }
+ 
+/* ── Add Position button ─────────────────────────────────────────────────────── */
+.plt-add-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  height: 36px; padding: 0 16px;
+  background: #16a34a; color: #fff;
+  border: none; border-radius: 9px;
+  font-size: 13px; font-weight: 600;
+  font-family: inherit; cursor: pointer;
+  transition: background .15s, transform .1s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.plt-add-btn:hover { background: #15803d; transform: translateY(-1px); }
+ 
+/* ── Summary chips ───────────────────────────────────────────────────────────── */
+.plt-summary {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.plt-chip {
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 600;
+}
+.plt-chip--total    { background: #f1f5f9; color: #475569; }
+.plt-chip--occupied { background: #dbeafe; color: #1d4ed8; }
+.plt-chip--vacant   { background: #dcfce7; color: #15803d; }
+ 
+/* ── Status badges ───────────────────────────────────────────────────────────── */
+.plt-badge {
+  display: inline-flex; align-items: center;
+  padding: 3px 9px; border-radius: 20px;
+  font-size: 11.5px; font-weight: 600;
+}
+.plt-badge--vacant   { background: #dcfce7; color: #15803d; }
+.plt-badge--occupied { background: #dbeafe; color: #1d4ed8; }
+.plt-badge--open     { background: #fef3c7; color: #b45309; }
+.plt-badge--closed   { background: #f1f5f9; color: #64748b; }
+.plt-badge--update   { background: #ede9fe; color: #7c3aed; font-size: 11px; }
+ 
+/* ── Action buttons ──────────────────────────────────────────────────────────── */
+.btn-sm {
+  display: inline-flex; align-items: center; gap: 4px;
+  height: 28px; padding: 0 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  cursor: pointer; border: 1.5px solid transparent;
+  transition: all .15s;
+}
+.btn-sm--edit   { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+.btn-sm--edit:hover   { background: #2563eb; color: #fff; }
+.btn-sm--delete { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
+.btn-sm--delete:hover { background: #dc2626; color: #fff; }
+.btn-sm:disabled { opacity: .5; cursor: not-allowed; }
+ 
+/* ── Position Modal ──────────────────────────────────────────────────────────── */
+.plt-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,.5);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px;
+}
+.plt-modal {
+  background: #fff; border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.18);
+  width: 100%; max-width: 580px;
+  max-height: 90vh; overflow-y: auto;
+  box-sizing: border-box;
+}
+.plt-modal-header {
+  display: flex; align-items: center; gap: 14px;
+  padding: 20px 24px 16px;
+  border-bottom: 1.5px solid #e2e8f0;
+}
+.plt-modal-icon { font-size: 24px; }
+.plt-modal-title { font-size: 17px; font-weight: 700; color: #0f172a; margin: 0; }
+.plt-modal-sub   { font-size: 12.5px; color: #94a3b8; margin: 2px 0 0; }
+.plt-close {
+  margin-left: auto; background: none; border: none;
+  font-size: 16px; color: #94a3b8; cursor: pointer;
+  width: 30px; height: 30px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .15s;
+}
+.plt-close:hover { background: #f1f5f9; color: #0f172a; }
+ 
+.plt-modal-body { padding: 16px 24px; }
+.plt-section-title {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: #16a34a; margin: 0 0 12px;
+}
+.plt-form-grid { display: grid; gap: 12px; margin-bottom: 12px; }
+.plt-form-grid--2 { grid-template-columns: 1fr 1fr; }
+ 
+.plt-field  { display: flex; flex-direction: column; gap: 5px; }
+.plt-label  { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: .03em; }
+.plt-req    { color: #ef4444; }
+.plt-input  {
+  border: 1.5px solid #e2e8f0; border-radius: 8px;
+  padding: 9px 12px; font-size: 13.5px; color: #0f172a;
+  background: #f8fafc; font-family: inherit;
+  outline: none; width: 100%; box-sizing: border-box;
+  transition: border-color .15s, box-shadow .15s;
+}
+.plt-input:focus { border-color: #16a34a; background: #fff; box-shadow: 0 0 0 3px rgba(22,163,74,.1); }
+.plt-input--err  { border-color: #ef4444; }
+.plt-input--mono { font-family: 'Courier New', monospace; }
+.plt-input--compact { width: 90px; padding: 4px 6px; font-size: 12px; }
+.plt-textarea { resize: vertical; min-height: 60px; }
+.plt-err-msg { font-size: 11px; color: #dc2626; margin-top: 1px; }
+ 
+.plt-modal-footer {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 24px 20px;
+  border-top: 1.5px solid #e2e8f0;
+}
+.plt-btn {
+  height: 38px; padding: 0 20px; border-radius: 8px;
+  font-size: 13px; font-weight: 600; font-family: inherit;
+  cursor: pointer; border: none; transition: all .15s;
+}
+.plt-btn--cancel { background: #f1f5f9; color: #64748b; }
+.plt-btn--cancel:hover { background: #e2e8f0; }
+.plt-btn--save   { background: #16a34a; color: #fff; }
+.plt-btn--save:hover:not(:disabled) { background: #15803d; }
+.plt-btn--save:disabled { opacity: .55; cursor: not-allowed; }
+ 
+/* ── Log Update inline form ──────────────────────────────────────────────────── */
+.plt-log-form {
+  background: #f8fafc; border: 1.5px solid #e2e8f0;
+  border-radius: 10px; padding: 16px;
+  margin-bottom: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+ 
+/* ── Salary table compact input ──────────────────────────────────────────────── */
+.plt-input--compact {
+  height: 30px; padding: 0 6px; border-radius: 6px;
+  border: 1.5px solid #e2e8f0; font-size: 12px;
+  font-family: inherit; outline: none; text-align: right;
+}
+.plt-input--compact:focus { border-color: #16a34a; }
+ 
+@media (max-width: 640px) {
+  .plt-form-grid--2 { grid-template-columns: 1fr; }
+  .plt-modal { max-width: 100%; border-radius: 10px 10px 0 0; }
+}
+.perf-tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.perf-tab-header h2 {
+  margin: 0;
+}
+
+.perf-tab-header p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Add button same style as Plantilla */
+.perf-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 36px;
+  padding: 0 16px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.perf-add-btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+/* Summary chips (Evaluation/Goal counts) */
+.perf-summary {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0 18px;
+}
+
+.perf-chip {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.perf-chip--total {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.perf-chip--excellent {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.perf-chip--needs {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.perf-chip--progress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.perf-chip--pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+/* Badges for rating/status */
+.perf-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.perf-badge--excellent {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.perf-badge--good {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.perf-badge--satisfactory {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.perf-badge--needs {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.perf-badge--pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.perf-badge--inprogress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.perf-badge--completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Table actions align properly */
+.perf-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Compact action buttons (reuse btn-sm pattern) */
+.perf-btn-sm {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+  font-family: var(--font);
+}
+
+.perf-btn-sm--view {
+  background: #f1f5f9;
+  color: #475569;
+  border-color: #e2e8f0;
+}
+
+.perf-btn-sm--view:hover {
+  background: #475569;
+  color: #fff;
+}
+
+.perf-btn-sm--edit {
+  background: #eff6ff;
+  color: #2563eb;
+  border-color: #bfdbfe;
+}
+
+.perf-btn-sm--edit:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+.perf-btn-sm--delete {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.perf-btn-sm--delete:hover {
+  background: #dc2626;
+  color: #fff;
+}
+
+.perf-btn-sm:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Improve select inside table */
+.data-table select {
+  padding: 6px 10px;
+  border: 1.5px solid var(--border);
+  border-radius: 7px;
+  background: #fff;
+  font-size: 12.5px;
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+.data-table select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+}
+
+/* Performance form containers */
+.perf-form-card {
+  background: #f8fafc;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+/* Two column layout (like plantilla modal grid) */
+.perf-form-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.perf-form-grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 640px) {
+  .perf-form-grid--2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Report export buttons like Plantilla */
+.perf-export-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.perf-export-options button {
+  background: #0f172a;
+  color: #fff;
+  border-radius: 9px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.perf-export-options button:hover {
+  background: #1e293b;
+}
+
+/* Text clamp for long feedback/review */
+.perf-clamp {
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+/* Empty state message */
+.perf-empty {
+  text-align: center;
+  padding: 28px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Table row subtle highlight like Plantilla */
+.data-table tbody tr:hover {
+  background: #f0fdf4;
+}
+
+/* Improve spacing between form and table */
+.perf-section-divider {
+  margin: 22px 0 10px;
+  border-top: 1.5px solid var(--border);
+}
+
+/* Make textarea more consistent */
+textarea {
+  line-height: 1.6;
+}
