@@ -5,7 +5,7 @@ import { RiLockPasswordFill } from "react-icons/ri";
 import Logo from "/src/assets/Municipality-of-Rosario.png";
 import { login } from "../auth";
 
-import "./css_pages/Loginpage.css";
+import "./pages/css_pages/Loginpage.css";
 
 function Loginpage() {
   const [email,           setEmail]           = useState("");
