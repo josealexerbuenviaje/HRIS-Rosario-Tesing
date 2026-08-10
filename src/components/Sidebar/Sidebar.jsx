@@ -4,7 +4,7 @@ import { LuLogOut } from "react-icons/lu";
 import { NavLink, useLocation } from "react-router-dom";
 import navItems from "../../data/NavItems";
 import { logout, getUser } from "../../auth";
-import "./Sidebar.css";
+import "./SIdebar.css";
 
 export default function Sidebar() {
   const [isOpen,    setIsOpen]    = useState(false);
