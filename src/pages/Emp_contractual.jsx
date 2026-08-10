@@ -1,5 +1,5 @@
 import React from "react";
-import "./css_pagesEmp_table.css";
+import "./pages/css_pages/Emp_table.css";
 
 export default function Emp_contractual() {
   const contractualEmployees = [
