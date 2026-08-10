@@ -3,7 +3,7 @@ import {
   LuCalendar, LuFilter, LuSearch, LuDownload,
   LuRefreshCw, LuUsers, LuClock, LuUserX, LuUmbrellaOff, LuTimer,
 } from "react-icons/lu";
-import "./css_components/attendance.css";
+import "../css_components/attendance.css";
 import { TabDTR, TabLiveLogs, TabOT, TabOB, TabReports } from "./Attendance_Content";
 
 const API_BASE = import.meta.env.VITE_API_BASE;

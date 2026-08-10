@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { authFetch } from '../auth';
-import './css_components/ContentArea.css';
+import '../css_components/ContentArea.css';
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
 const StatusBadge = ({ status }) => {

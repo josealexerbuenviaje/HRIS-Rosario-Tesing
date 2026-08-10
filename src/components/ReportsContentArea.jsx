@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './css_components/ContentArea.css'; // Reuse or copy the CSS file
+import '../css_components/ContentArea.css'; // Reuse or copy the CSS file
 
 function ReportsContentArea() {
   const [activeTab, setActiveTab] = useState('hrOverview');

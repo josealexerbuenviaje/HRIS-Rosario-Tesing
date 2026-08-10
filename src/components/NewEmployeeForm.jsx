@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import './css_components/NewEmployeeForm.css';
+import '../css_components/NewEmployeeForm.css';
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 const API_BASE = import.meta.env.VITE_API_BASE;
