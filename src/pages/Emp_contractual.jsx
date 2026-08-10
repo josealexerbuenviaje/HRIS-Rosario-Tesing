@@ -1,6 +1,5 @@
 import React from "react";
-import "./pages/css_pages/Emp_table.css";
-
+import "./css_pages/Emp_table.css";
 export default function Emp_contractual() {
   const contractualEmployees = [
     { id: 1, name: "Juan Dela Cruz", position: "Web Developer", department: "IT", startDate: "2024-01-15", endDate: "2026-07-15", status: "Active" },

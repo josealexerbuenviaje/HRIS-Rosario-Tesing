@@ -4,8 +4,7 @@ import { FaUserAlt, FaEye, FaEyeSlash,FaSignInAlt} from "react-icons/fa";
 import { RiLockPasswordFill } from "react-icons/ri";
 import Logo from "/src/assets/Municipality-of-Rosario.png";
 import { login } from "../auth";
-
-import "../css_pages/Loginpage.css";
+import "./css_pages/Loginpage.css";
 
 function Loginpage() {
   const [email,           setEmail]           = useState("");

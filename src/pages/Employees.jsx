@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Content from "../components/Content";
-import "../css_pages/Employees.css";
+import "./css_pages/Employees.css";
 
 const API_BASE = import.meta.env.VITE_API_BASE;
 
