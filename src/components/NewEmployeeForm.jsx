@@ -244,9 +244,8 @@ function NewEmployeeForm({ isOpen, onClose }) {
     };
 
     try {
-      const res = await fetch(`${API_BASE}/add_employee.php`, {
+      const res = await authFetch(`add_employee.php`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
       const json = await res.json();
