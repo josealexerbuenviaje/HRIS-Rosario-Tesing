@@ -470,7 +470,7 @@ function TabCredits() {
 
   // Load departments for filter
   useEffect(() => {
-    authFetch(`get_departments.php?status=Active`)
+    authFetch(`get_departments_with_head.php?status=Active`)
       .then(r => r.json())
       .then(json => { if (json.status === 'success') setDepts(json.data || []); })
       .catch(console.error);
