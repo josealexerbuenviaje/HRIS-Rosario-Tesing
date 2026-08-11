@@ -311,7 +311,7 @@ function RecruitmentContentArea() {
     if (!window.confirm("Are you sure you want to delete this record?")) return;
     setApiMsg(null);
     try {
-      const res  = await authFetch(`${endpoint}?id=${id}`, { method: "DELETE" });
+      const res  = await authFetch(`${endpoint}.php?id=${id}`, { method: "DELETE" });
       const json = await safeJson(res);
       if (json?.success) {
         setApiMsg({ type: "success", text: json.message || "Deleted." });
