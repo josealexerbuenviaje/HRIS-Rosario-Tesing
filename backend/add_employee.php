@@ -1,6 +1,7 @@
 <?php
 
 require_once 'cors.php';
+require_once 'jwt_helper.php';
 
 function sendError(int $code, string $message, array $extra = []): never {
     http_response_code($code);
