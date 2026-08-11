@@ -55,7 +55,7 @@ loadEnv(__DIR__ . '/.env');
 //  CONFIG (NO FALLBACK SECRET!)
 // ============================================================
 $JWT_SECRET = $_ENV['JWT_SECRET'] ?? null;
-$JWT_EXPIRY = (int)($_ENV['JWT_EXPIRY'] ?? 3600); // default: 1 hour (dev safe)
+$JWT_EXPIRY = (int)($_ENV['JWT_EXPIRY'] ?? 3600);
 $JWT_ISSUER = $_ENV['JWT_ISSUER'] ?? 'rosario-hris';
 $JWT_AUDIENCE = $_ENV['JWT_AUDIENCE'] ?? 'rosario-frontend';
 
