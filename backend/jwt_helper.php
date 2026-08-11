@@ -54,10 +54,10 @@ loadEnv(__DIR__ . '/.env');
 // ============================================================
 //  CONFIG (NO FALLBACK SECRET!)
 // ============================================================
-$JWT_SECRET = $_ENV['JWT_SECRET'] ?? null;
-$JWT_EXPIRY = (int)($_ENV['JWT_EXPIRY'] ?? 3600);
-$JWT_ISSUER = $_ENV['JWT_ISSUER'] ?? 'rosario-hris';
-$JWT_AUDIENCE = $_ENV['JWT_AUDIENCE'] ?? 'rosario-frontend';
+$JWT_SECRET = getenv('JWT_SECRET') ?: ($_ENV['JWT_SECRET'] ?? null);
+$JWT_EXPIRY = (int)(getenv('JWT_EXPIRY') ?: ($_ENV['JWT_EXPIRY'] ?? 3600));
+$JWT_ISSUER = getenv('JWT_ISSUER') ?: ($_ENV['JWT_ISSUER'] ?? 'rosario-hris');
+$JWT_AUDIENCE = getenv('JWT_AUDIENCE') ?: ($_ENV['JWT_AUDIENCE'] ?? 'rosario-frontend');
 
 if (!$JWT_SECRET) {
     die("JWT_SECRET is missing. Please set it in .env.");
