@@ -10,4 +10,7 @@ $conn = new mysqli($host, $user, $pass, $db, $port);
 if ($conn->connect_error) {
     die(json_encode(["status" => "error", "message" => "Database connection failed"]));
 }
+
+// Relax strict SQL mode so legacy zero-dates ('0000-00-00') don't throw errors
+$conn->query("SET sql_mode = ''");
 ?>
