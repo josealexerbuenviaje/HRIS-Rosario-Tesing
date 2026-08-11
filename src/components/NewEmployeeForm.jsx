@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../css_components/NewEmployeeForm.css';
+import { authFetch } from '../auth';
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -243,10 +244,10 @@ function NewEmployeeForm({ isOpen, onClose }) {
     };
 
     try {
-      const res  = await fetch(`${API_BASE}/add_employee.php`, {
-        method:  'POST',
+      const res = await fetch(`${API_BASE}/add_employee.php`, {
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(payload),
+        body: JSON.stringify(payload),
       });
       const json = await res.json();
 
@@ -320,10 +321,9 @@ function NewEmployeeForm({ isOpen, onClose }) {
     }, 200);
 
     try {
-      const res  = await fetch(`${API_BASE}/import_employees.php`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(importData),
+      const res = await authFetch(`import_employees.php`, {
+        method: 'POST',
+        body: JSON.stringify(importData),
       });
       clearInterval(ticker);
       setImportProgress(100);
