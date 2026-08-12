@@ -10,6 +10,7 @@
 //  POST   /appointments.php?action=checklist                 — mark checklist item done/undone
 // ============================================================
 require_once 'bootstrap.php';
+$method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 
 // ── Checklist — GET ───────────────────────────────────────────────────────────
