@@ -1,17 +1,5 @@
 <?php
-
-require_once 'cors.php';
-require_once 'jwt_helper.php';
-
-function sendError(int $code, string $message, array $extra = []): never {
-    http_response_code($code);
-    echo json_encode(array_merge(["status" => "error", "message" => $message], $extra));
-    exit;
-}
-$auth   = requireAuth();
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') sendError(405, "Method not allowed");
-
-require_once 'db.php';
+require_once 'bootstrap.php';
 
 $body = file_get_contents("php://input");
 $data = json_decode($body, true);
