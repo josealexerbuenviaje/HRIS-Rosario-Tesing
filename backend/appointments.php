@@ -9,12 +9,7 @@
 //  GET    /appointments.php?action=checklist&applicant_id=N  — get checklist progress
 //  POST   /appointments.php?action=checklist                 — mark checklist item done/undone
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
-
-$auth   = requireAuth();
-$method = $_SERVER['REQUEST_METHOD'];
+require_once 'bootstrap.php';
 $action = $_GET['action'] ?? '';
 
 // ── Checklist — GET ───────────────────────────────────────────────────────────

@@ -7,12 +7,7 @@
 //  PUT    /applicants.php?id=N                 — update applicant / status
 //  DELETE /applicants.php?id=N                 — hard delete (Admin only)
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
-
-$auth   = requireAuth();
-$method = $_SERVER['REQUEST_METHOD'];
+require_once 'bootstrap.php';
 
 // ── GET ───────────────────────────────────────────────────────────────────────
 if ($method === 'GET') {

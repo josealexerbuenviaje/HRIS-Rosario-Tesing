@@ -4,14 +4,7 @@
 //  Returns Active departments with their Active sections nested.
 //  Used by the two-level picker in NewEmployeeForm + EmployeeModal.
 // ============================================================
-require_once 'cors.php';
-
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(["status"=>"error","message"=>"Method not allowed"]); exit;
-}
-
-require_once 'db.php';
+require_once 'bootstrap.php';
 
 // Load all active departments
 $deptRes = $conn->query("

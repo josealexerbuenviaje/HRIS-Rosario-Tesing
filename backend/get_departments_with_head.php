@@ -7,16 +7,7 @@
 //  — No internal error details leaked to client
 //  — Input validated before use
 // ============================================================
-
-require_once 'cors.php';
-
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
-    http_response_code(405);
-    echo json_encode(["status" => "error", "message" => "Method not allowed"]);
-    exit;
-}
-
-require_once 'db.php';
+require_once 'bootstrap.php';
 
 // ── Enable mysqli exceptions so every failed query throws ────────────────────
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
