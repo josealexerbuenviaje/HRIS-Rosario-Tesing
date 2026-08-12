@@ -8,6 +8,7 @@
 //  DELETE /applicants.php?id=N                 — hard delete (Admin only)
 // ============================================================
 require_once 'bootstrap.php';
+$method = $_SERVER['REQUEST_METHOD'];
 
 // ── GET ───────────────────────────────────────────────────────────────────────
 if ($method === 'GET') {
