@@ -7,11 +7,7 @@
 //  PUT    /interview_results.php?id=N      — edit result
 //  DELETE /interview_results.php?id=N      — delete (Admin/HR only)
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
-
-$auth   = requireAuth();
+require_once 'bootstrap.php';
 $method = $_SERVER['REQUEST_METHOD'];
 
 // ── GET ───────────────────────────────────────────────────────────────────────

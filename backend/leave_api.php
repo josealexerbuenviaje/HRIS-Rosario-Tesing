@@ -11,9 +11,7 @@
 //  POST ?action=update_status  body: {leave_id, status, comment}
 //  GET  ?action=generate_report&type=&from=&to=&dept_id=&format=
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
+require_once 'bootstrap.php';
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // ── Auth ──────────────────────────────────────────────────────────────────────

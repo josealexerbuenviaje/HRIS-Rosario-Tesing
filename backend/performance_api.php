@@ -22,17 +22,10 @@
 //  POST ?action=delete_feedback
 //
 // ============================================================
-
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
-$auth   = requireAuth();
+require_once 'bootstrap.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $action = trim($_GET['action'] ?? '');
-
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 if (!$action) {
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "Missing action"]);

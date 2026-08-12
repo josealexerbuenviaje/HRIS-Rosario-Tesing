@@ -6,11 +6,7 @@
 //  PUT    /job_postings.php?id=N     — update posting
 //  DELETE /job_postings.php?id=N     — soft-close (sets status=Closed)
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
-
-$auth = requireAuth();
+require_once 'bootstrap.php';
 $method = $_SERVER['REQUEST_METHOD'];
 
 // ── GET — list ────────────────────────────────────────────────────────────────
