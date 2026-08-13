@@ -9,7 +9,7 @@
 // ============================================================
 require_once 'bootstrap.php';
 
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 
 // ── Parse body ────────────────────────────────────────────────────────────────
 $rows = json_decode(file_get_contents("php://input"), true);
