@@ -11,22 +11,7 @@
  * payload as an object ($auth->sub = user id, $auth->role = role) or exits with a
  * 401 JSON error internally if the token is missing/invalid.
  */
-
-header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *"); // tighten to your frontend origin in production
-header("Access-Control-Allow-Headers: Authorization, Content-Type");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit;
-}
-
-require_once __DIR__ . '/db.php';           // expects $conn (mysqli instance)
-require_once __DIR__ . '/jwt_helper.php';  // expects requireAuth() to return the decoded token or exit 401
-
-$auth = requireAuth();
-
+require_once 'bootstrap.php';
 function respond($status, $message, $data = null) {
     echo json_encode([
         "status"  => $status,

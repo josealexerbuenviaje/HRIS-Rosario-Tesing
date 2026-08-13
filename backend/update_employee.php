@@ -7,18 +7,7 @@
 //  — No internal error details leaked to client
 //  — try/catch/finally for clean error handling
 // ============================================================
-
-require_once 'cors.php';
-
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(["status" => "error", "message" => "Method not allowed"]);
-    exit;
-}
-
-require_once 'db.php';
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+require_once 'bootstrap.php';
 
 // ── Parse body ────────────────────────────────────────────────────────────────
 $data = json_decode(file_get_contents("php://input"), true);

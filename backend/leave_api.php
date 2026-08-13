@@ -12,7 +12,6 @@
 //  GET  ?action=generate_report&type=&from=&to=&dept_id=&format=
 // ============================================================
 require_once 'bootstrap.php';
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 $auth   = requireAuth();

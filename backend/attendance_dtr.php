@@ -7,10 +7,7 @@
 //  GET  ?action=get_logs&limit=
 //  POST ?action=sync_logs
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
+require_once 'bootstrap.php';
 $action = trim($_GET['action'] ?? $_POST['action'] ?? '');
 $method = $_SERVER['REQUEST_METHOD'];
 

@@ -4,10 +4,7 @@
 //  Handles: generate_report
 //  GET ?action=generate_report&type=daily&from=&to=&dept_id=&format=csv|xlsx|pdf
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
+require_once 'bootstrap.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $action = trim($_GET['action'] ?? '');
 

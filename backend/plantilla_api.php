@@ -1,12 +1,5 @@
 <?php
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-header("Content-Type: application/json");
-
-$auth   = requireAuth();
+require_once 'bootstrap.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 

@@ -7,10 +7,7 @@
 //  GET  ?action=get_ob&date=&dept_id=&search=
 //  POST ?action=update_ob         body: {ob_id, status}
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
+rrequire_once 'bootstrap.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $action = trim($_GET['action'] ?? '');
 

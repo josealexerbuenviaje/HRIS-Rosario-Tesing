@@ -25,7 +25,7 @@
 require_once 'bootstrap.php';
 $method = $_SERVER['REQUEST_METHOD'];
 $action = trim($_GET['action'] ?? '');
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 if (!$action) {
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "Missing action"]);

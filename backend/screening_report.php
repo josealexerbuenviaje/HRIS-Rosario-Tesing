@@ -4,11 +4,7 @@
 //  GET  /screening_report.php            — JSON screening summary
 //  GET  /screening_report.php?export=csv — download as CSV
 // ============================================================
-require_once 'cors.php';
-require_once 'db.php';
-require_once 'jwt_helper.php';
-
-$auth = requireAuth();
+require_once 'bootstrap.php';
 requireRole($auth, ['Admin', 'HR', 'Manager']);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {

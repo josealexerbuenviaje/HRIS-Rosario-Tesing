@@ -9,9 +9,6 @@
 // ============================================================
 require_once 'bootstrap.php';
 
-// ── Enable mysqli exceptions so every failed query throws ────────────────────
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
 // ── Helper: sanitize zero-dates from MySQL ────────────────────────────────────
 function safeDate(?string $v): ?string {
     if (!$v || $v === '0000-00-00' || str_starts_with($v, '0000-00-00')) return null;

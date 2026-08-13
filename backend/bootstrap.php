@@ -37,3 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // ── Load DB connection and JWT helpers once, for every endpoint ──────────────
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/jwt_helper.php';
+
+// ── Enable mysqli exceptions so every failed query throws ────────────────────
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
