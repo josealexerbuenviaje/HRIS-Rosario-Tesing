@@ -35,7 +35,7 @@ function Loginpage() {
       if (result.success) {
         navigate(from, { replace: true });
       } else {
-        setError(result.error || "Invalid credentials.");
+        setError(result.message || "Invalid credentials.");
       }
     } catch (err) {
       console.error(err);
