@@ -7,8 +7,6 @@ import "../css_components/ContentArea.css";
 // Shared UI Helpers
 // ─────────────────────────────────────────────────────────────
 
-const { confirm, ConfirmDialog } = useConfirm();
-
 const ApiMsg = ({ msg }) =>
   msg ? <div className={`api-msg api-msg--${msg.type}`}>{msg.text}</div> : null;
 
@@ -72,6 +70,8 @@ function RecruitmentContentArea() {
   const [reportFrom, setReportFrom] = useState("");
   const [reportTo,   setReportTo]   = useState("");
 
+// ── Delete confirm window ──────────────────────────────────────────────────
+  const { confirm, ConfirmDialog } = useConfirm();
   // ─────────────────────────────────────────────────────────────
   // Load employees/applicants for dropdowns
   // ─────────────────────────────────────────────────────────────
