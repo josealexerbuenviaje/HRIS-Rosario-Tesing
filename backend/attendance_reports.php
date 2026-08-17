@@ -5,6 +5,7 @@
 //  GET ?action=generate_report&type=daily&from=&to=&dept_id=&format=csv|xlsx|pdf
 // ============================================================
 require_once 'bootstrap.php';
+$auth = requireAuth();
 $method = $_SERVER['REQUEST_METHOD'];
 $action = trim($_GET['action'] ?? '');
 

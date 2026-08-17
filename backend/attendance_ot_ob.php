@@ -7,7 +7,8 @@
 //  GET  ?action=get_ob&date=&dept_id=&search=
 //  POST ?action=update_ob         body: {ob_id, status}
 // ============================================================
-rrequire_once 'bootstrap.php';
+require_once 'bootstrap.php';
+$auth = requireAuth();
 $method = $_SERVER['REQUEST_METHOD'];
 $action = trim($_GET['action'] ?? '');
 

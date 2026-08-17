@@ -8,7 +8,7 @@
 //  — Input validated before use
 // ============================================================
 require_once 'bootstrap.php';
-
+$auth = requireAuth();
 // ── Helper: sanitize zero-dates from MySQL ────────────────────────────────────
 function safeDate(?string $v): ?string {
     if (!$v || $v === '0000-00-00' || str_starts_with($v, '0000-00-00')) return null;

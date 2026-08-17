@@ -8,9 +8,7 @@
 //  — try/catch/finally for clean error handling
 // ============================================================
 require_once 'bootstrap.php';
-
-
-
+$auth = requireAuth();
 // ── Parse body ────────────────────────────────────────────────────────────────
 $rows = json_decode(file_get_contents("php://input"), true);
 

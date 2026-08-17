@@ -5,7 +5,7 @@
 //  Used by the two-level picker in NewEmployeeForm + EmployeeModal.
 // ============================================================
 require_once 'bootstrap.php';
-
+$auth = requireAuth();
 // Load all active departments
 $deptRes = $conn->query("
     SELECT dept_id, dept_code, dept_name

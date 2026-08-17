@@ -1,6 +1,6 @@
 <?php
 require_once 'bootstrap.php';
-
+$auth = requireAuth();
 $body = file_get_contents("php://input");
 $data = json_decode($body, true);
 if (!is_array($data)) sendError(400, "Invalid or missing JSON payload");

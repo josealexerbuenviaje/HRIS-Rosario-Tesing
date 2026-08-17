@@ -1,5 +1,6 @@
 <?php
 require_once 'bootstrap.php';
+$auth = requireAuth();
 $method = $_SERVER['REQUEST_METHOD'];
 $action = $_GET['action'] ?? '';
 

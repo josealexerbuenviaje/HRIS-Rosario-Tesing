@@ -12,6 +12,7 @@
  * 401 JSON error internally if the token is missing/invalid.
  */
 require_once 'bootstrap.php';
+$auth = requireAuth();
 function respond($status, $message, $data = null) {
     echo json_encode([
         "status"  => $status,

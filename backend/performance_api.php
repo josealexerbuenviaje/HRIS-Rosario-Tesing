@@ -23,6 +23,7 @@
 //
 // ============================================================
 require_once 'bootstrap.php';
+$auth = requireAuth();
 $method = $_SERVER['REQUEST_METHOD'];
 $action = trim($_GET['action'] ?? '');
 

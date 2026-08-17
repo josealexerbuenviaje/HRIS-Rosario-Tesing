@@ -7,6 +7,7 @@
 //  DELETE /job_postings.php?id=N     — soft-close (sets status=Closed)
 // ============================================================
 require_once 'bootstrap.php';
+$auth = requireAuth();
 $method = $_SERVER['REQUEST_METHOD'];
 
 // ── GET — list ────────────────────────────────────────────────────────────────

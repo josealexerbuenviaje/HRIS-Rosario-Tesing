@@ -8,6 +8,7 @@
 //  POST ?action=sync_logs
 // ============================================================
 require_once 'bootstrap.php';
+$auth = requireAuth();
 $action = trim($_GET['action'] ?? $_POST['action'] ?? '');
 $method = $_SERVER['REQUEST_METHOD'];
 

@@ -4,6 +4,7 @@
 //  POST — returns a new token if the current one is still valid
 // ============================================================
 require_once 'bootstrap.php';
+$auth = requireAuth();
 try {
     // $auth->sub holds the user id (set as "sub" in generateToken)
     // Your original code used $auth->user_id which doesn't exist in the payload

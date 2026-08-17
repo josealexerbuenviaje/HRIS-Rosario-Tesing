@@ -8,6 +8,7 @@
 //  DELETE /applicants.php?id=N                 — hard delete (Admin only)
 // ============================================================
 require_once 'bootstrap.php';
+$auth = requireAuth();
 $method = $_SERVER['REQUEST_METHOD'];
 
 // ── GET ───────────────────────────────────────────────────────────────────────
