@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
+import { useConfirm } from "./useConfirm";
 import "../css_components/ContentArea.css";
 
 // ─────────────────────────────────────────────────────────────
 // Shared UI Helpers
 // ─────────────────────────────────────────────────────────────
+
+const { confirm, ConfirmDialog } = useConfirm();
+
 const ApiMsg = ({ msg }) =>
   msg ? <div className={`api-msg api-msg--${msg.type}`}>{msg.text}</div> : null;
 
@@ -177,7 +181,8 @@ function RecruitmentContentArea() {
   // Update Job Status (Open / Closed)
   // ─────────────────────────────────────────────────────────────
   const closeJobPosting = async (job) => {
-    if (!window.confirm("Close this job posting?")) return;
+    const ok = await confirm("Close this job posting?", { danger: false });
+    if (!ok) return;
     setApiMsg(null);
     try {
       const res  = await authFetch(`job_postings.php?id=${job.id}`, { method: "DELETE" });
@@ -308,7 +313,8 @@ function RecruitmentContentArea() {
   // Delete helpers
   // ─────────────────────────────────────────────────────────────
   const deleteItem = async (endpoint, id, reload) => {
-    if (!window.confirm("Are you sure you want to delete this record?")) return;
+    const ok = await confirm("Are you sure you want to delete this record?");
+    if (!ok) return;
     setApiMsg(null);
     try {
       const res  = await authFetch(`${endpoint}.php?id=${id}`, { method: "DELETE" });
@@ -971,6 +977,7 @@ function RecruitmentContentArea() {
       </nav>
 
       {renderContent()}
+      {ConfirmDialog}
     </div>
   );
 }
