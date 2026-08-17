@@ -5,8 +5,8 @@
 //  GET  /screening_report.php?export=csv — download as CSV
 // ============================================================
 require_once 'bootstrap.php';
-requireRole($auth, ['Admin', 'HR', 'Manager']);
-
+$auth = requireAuth();
+requireRole($auth, ['Admin', 'HR']);
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     http_response_code(405);
     echo json_encode(['success' => false, 'error' => 'Method not allowed.']);

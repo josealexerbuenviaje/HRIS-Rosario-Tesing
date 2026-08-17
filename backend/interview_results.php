@@ -8,8 +8,8 @@
 //  DELETE /interview_results.php?id=N      — delete (Admin/HR only)
 // ============================================================
 require_once 'bootstrap.php';
+$auth   = requireAuth();
 $method = $_SERVER['REQUEST_METHOD'];
-
 // ── GET ───────────────────────────────────────────────────────────────────────
 if ($method === 'GET') {
 
