@@ -13,7 +13,19 @@ const StatusBadge = ({ status }) => {
                 Open: 'plt-badge--open', Closed: 'plt-badge--closed' };
   return <span className={`plt-badge ${map[status] ?? ''}`}>{status}</span>;
 };
-
+// ── Field component — defined OUTSIDE PositionModal so it doesn't remount on every keystroke ──
+function Field({ label, name, required, type = 'text', children, form, errors, onChange }) {
+  return (
+    <div className="plt-field">
+      <label className="plt-label">{label}{required && <span className="plt-req"> *</span>}</label>
+      {children ?? (
+        <input className={`plt-input${errors[name] ? ' plt-input--err' : ''}`}
+          type={type} name={name} value={form[name] ?? ''} onChange={onChange} />
+      )}
+      {errors[name] && <span className="plt-err-msg">{errors[name]}</span>}
+    </div>
+  );
+}
 // ─────────────────────────────────────────────────────────────────────────────
 // ADD / EDIT POSITION MODAL
 // ─────────────────────────────────────────────────────────────────────────────
@@ -70,17 +82,6 @@ function PositionModal({ position, depts, onClose, onSaved }) {
     finally { setSaving(false); }
   };
 
-  const Field = ({ label, name, required, type = 'text', children }) => (
-    <div className="plt-field">
-      <label className="plt-label">{label}{required && <span className="plt-req"> *</span>}</label>
-      {children ?? (
-        <input className={`plt-input${errors[name] ? ' plt-input--err' : ''}`}
-          type={type} name={name} value={form[name] ?? ''} onChange={handleChange} />
-      )}
-      {errors[name] && <span className="plt-err-msg">{errors[name]}</span>}
-    </div>
-  );
-
   return (
     <div className="plt-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="plt-modal">
@@ -98,25 +99,25 @@ function PositionModal({ position, depts, onClose, onSaved }) {
           <div className="plt-modal-body">
             <p className="plt-section-title">Position Info</p>
             <div className="plt-form-grid plt-form-grid--2">
-              <Field label="Item Number" name="item_number">
+              <Field label="Item Number" name="item_number" form={form} errors={errors} onChange={handleChange}>
                 <input className="plt-input plt-input--mono" name="item_number"
                   value={form.item_number ?? ''} onChange={handleChange}
                   placeholder="Auto-generated if blank" />
               </Field>
-              <Field label="Status" name="status">
+              <Field label="Status" name="status" form={form} errors={errors} onChange={handleChange}>
                 <select className="plt-input" name="status" value={form.status ?? 'Vacant'} onChange={handleChange}>
                   <option>Vacant</option>
                   <option>Occupied</option>
                 </select>
               </Field>
             </div>
-            <Field label="Position Title" name="position_title" required>
+            <Field label="Position Title" name="position_title" required form={form} errors={errors} onChange={handleChange}>
               <input className={`plt-input${errors.position_title ? ' plt-input--err' : ''}`}
                 name="position_title" value={form.position_title ?? ''} onChange={handleChange}
                 placeholder="e.g. Administrative Officer IV" />
             </Field>
             <div className="plt-form-grid plt-form-grid--2">
-              <Field label="Department" name="dept_id" required>
+            <Field label="Department" name="dept_id" required form={form} errors={errors} onChange={handleChange}>
                 <select className={`plt-input${errors.dept_id ? ' plt-input--err' : ''}`}
                   name="dept_id" value={form.dept_id ?? ''} onChange={handleChange}>
                   <option value="">— Select —</option>
@@ -126,19 +127,19 @@ function PositionModal({ position, depts, onClose, onSaved }) {
                 </select>
                 {errors.dept_id && <span className="plt-err-msg">{errors.dept_id}</span>}
               </Field>
-              <Field label="Salary Grade (1–33)" name="salary_grade" required type="number">
+              <Field label="Salary Grade (1–33)" name="salary_grade" required type="number" form={form} errors={errors} onChange={handleChange}>
                 <input className={`plt-input${errors.salary_grade ? ' plt-input--err' : ''}`}
                   type="number" name="salary_grade" min="1" max="33"
                   value={form.salary_grade ?? ''} onChange={handleChange} />
                 {errors.salary_grade && <span className="plt-err-msg">{errors.salary_grade}</span>}
               </Field>
             </div>
-            <Field label="Monthly Salary (₱)" name="monthly_salary" type="number">
+            <Field label="Monthly Salary (₱)" name="monthly_salary" type="number" form={form} errors={errors} onChange={handleChange}>
               <input className="plt-input" type="number" name="monthly_salary"
                 value={form.monthly_salary ?? ''} onChange={handleChange}
                 placeholder="Auto-filled from salary schedule" />
             </Field>
-            <Field label="Remarks" name="remarks">
+            <Field label="Remarks" name="remarks" form={form} errors={errors} onChange={handleChange}>
               <textarea className="plt-input plt-textarea" name="remarks"
                 value={form.remarks ?? ''} onChange={handleChange}
                 placeholder="Optional notes…" rows={2} />
@@ -170,7 +171,6 @@ function TabPositions() {
   const [deleting,  setDeleting]  = useState(null);
   const [apiMsg,    setApiMsg]    = useState(null);
   const { confirm, ConfirmDialog } = useConfirm();
-
   // Load depts once
   useEffect(() => {
     authFetch(`get_departments_with_head.php?status=Active`)
