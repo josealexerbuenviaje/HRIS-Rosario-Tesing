@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
+import { useConfirm } from "./useConfirm";
 import "../css_components/ContentArea.css";
 
 // ─────────────────────────────────────────────────────────────
@@ -65,6 +66,8 @@ function TrainingContentArea() {
   const [reportType, setReportType] = useState("course_completion");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+
+  const {confirm, ConfirmDialog} = useConfirm();
 
   // ─────────────────────────────────────────────────────────────
   // Load Employees
@@ -304,8 +307,10 @@ function TrainingContentArea() {
   // Delete Functions
   // ─────────────────────────────────────────────────────────────
   const deleteItem = async (type, idField, idValue) => {
-    if (!window.confirm("Are you sure you want to delete this record?")) return;
+    const ok = await confirm("Are you sure you want to delete this record?");
+    if (!ok) return;
     setApiMsg(null);
+    // ...rest unchanged
     try {
       const res  = await authFetch(`training_api.php?action=delete_${type}`, {
         method: "POST",
@@ -855,6 +860,7 @@ function TrainingContentArea() {
       </nav>
 
       {renderContent()}
+      {ConfirmDialog}
     </div>
   );
 }

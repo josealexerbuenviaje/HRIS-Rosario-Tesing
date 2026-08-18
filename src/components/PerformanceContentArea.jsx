@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
+import { useConfirm } from "./useConfirm";
 import "../css_components/ContentArea.css";
+
 
 // ─────────────────────────────────────────────────────────────
 // Shared UI Helpers
@@ -61,6 +63,8 @@ function PerformanceContentArea() {
   const [reportType, setReportType] = useState("evaluation_summary");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+
+  const { confirm, ConfirmDialog } = useConfirm();
 
   // ─────────────────────────────────────────────────────────────
   // Load Employees
@@ -294,7 +298,8 @@ function PerformanceContentArea() {
   // Delete Functions
   // ─────────────────────────────────────────────────────────────
   const deleteItem = async (type, idField, idValue) => {
-    if (!window.confirm("Are you sure you want to delete this record?")) return;
+    const ok = await confirm("Are you sure you want to delete this record?");
+    if (!ok) return;
     setApiMsg(null);
     try {
       const res  = await authFetch(`performance_api.php?action=delete_${type}`, {
@@ -810,6 +815,7 @@ function PerformanceContentArea() {
       </nav>
 
       {renderContent()}
+      {ConfirmDialog}
     </div>
   );
 }

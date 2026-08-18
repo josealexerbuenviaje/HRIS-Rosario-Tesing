@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { authFetch } from '../auth';
+import { useConfirm } from "./useConfirm";
 import '../css_components/ContentArea.css';
 
 // ── Shared ────────────────────────────────────────────────────────────────────
@@ -79,6 +80,8 @@ function PositionModal({ position, depts, onClose, onSaved }) {
       {errors[name] && <span className="plt-err-msg">{errors[name]}</span>}
     </div>
   );
+
+  const { confirm, ConfirmDialog } = useConfirm();
 
   return (
     <div className="plt-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -189,9 +192,10 @@ function TabPositions() {
 
   useEffect(() => { load(); }, [load]);
 
-  const handleDelete = async (posId) => {
-    if (!window.confirm('Remove this position?')) return;
-    setDeleting(posId); setApiMsg(null);
+const handleDelete = async (posId) => {
+  const ok = await confirm("Remove this position?");
+  if (!ok) return;
+  setDeleting(posId); setApiMsg(null);
     try {
       const res  = await authFetch(`plantilla_api.php?action=delete_position`, {
         method: 'POST', body: JSON.stringify({ position_id: posId }),
@@ -303,6 +307,7 @@ function TabPositions() {
           onSaved={load}
         />
       )}
+      {ConfirmDialog}
     </div>
   );
 }
