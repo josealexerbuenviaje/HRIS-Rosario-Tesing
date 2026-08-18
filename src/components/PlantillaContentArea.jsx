@@ -81,8 +81,6 @@ function PositionModal({ position, depts, onClose, onSaved }) {
     </div>
   );
 
-  const { confirm, ConfirmDialog } = useConfirm();
-
   return (
     <div className="plt-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="plt-modal">
@@ -171,6 +169,7 @@ function TabPositions() {
   const [modal,     setModal]     = useState(null); // null | 'add' | position obj
   const [deleting,  setDeleting]  = useState(null);
   const [apiMsg,    setApiMsg]    = useState(null);
+  const { confirm, ConfirmDialog } = useConfirm();
 
   // Load depts once
   useEffect(() => {
