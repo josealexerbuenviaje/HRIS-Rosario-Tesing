@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { InitialsAvatar } from "./Employee_Card";
-
-const API_BASE = import.meta.env.VITE_API_BASE;
+import { authFetch } from "../auth";
 
 const TABS = [
   { key: "personal",    label: "Personal",    icon: "👤" },
@@ -9,7 +8,7 @@ const TABS = [
   { key: "employment",  label: "Employment",  icon: "💼" },
   { key: "government",  label: "Gov't IDs",   icon: "🪪" },
   { key: "other",       label: "Other",       icon: "📋" },
-];
+]; 
 
 const OPTS = {
   sex:          ["Male", "Female"],
@@ -103,7 +102,7 @@ export default function EmployeeModal({ employee, isOpen, onClose, onUpdated }) 
 
   // Load department tree for the two-level picker
   useEffect(() => {
-    fetch(`${API_BASE}/get_dept_for_employee.php`)
+    authFetch(`get_dept_for_employee.php`)
       .then(r => r.json())
       .then(json => { if (json.status === "success") setDeptTree(json.data || []); })
       .catch(() => {});
@@ -172,9 +171,8 @@ export default function EmployeeModal({ employee, isOpen, onClose, onUpdated }) 
     setSaving(true);
     setApiMsg(null);
     try {
-      const res  = await fetch(`${API_BASE}/update_employee.php`, {
+      const res = await authFetch(`update_employee.php`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       const json = await res.json();
