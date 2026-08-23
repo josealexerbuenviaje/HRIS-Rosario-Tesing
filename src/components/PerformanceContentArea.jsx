@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
 import { useConfirm } from "./useConfirm";
 import "../css_components/ContentArea.css";
+import TableSkeleton from "./TableSkeleton";
 
 
 // ─────────────────────────────────────────────────────────────
@@ -436,15 +437,13 @@ function PerformanceContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
-                ) : evaluations.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No evaluations found.</td>
-                  </tr>
-                ) : (
-                  evaluations.map((ev) => (
+                    <TableSkeleton columns={5} rows={5} />
+                  ) : evaluations.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No evaluations found.</td>
+                    </tr>
+                  ) : (
+                    evaluations.map((ev) => (
                     <tr key={ev.evaluation_id}>
                       <td>{ev.employee_name}</td>
                       <td>{ev.rating}</td>
@@ -533,15 +532,13 @@ function PerformanceContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
-                ) : goals.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No goals found.</td>
-                  </tr>
-                ) : (
-                  goals.map((g) => (
+                    <TableSkeleton columns={5} rows={5} />
+                  ) : goals.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No goals found.</td>
+                    </tr>
+                  ) : (
+                    goals.map((g) => (
                     <tr key={g.goal_id}>
                       <td>{g.employee_name}</td>
                       <td>{g.goal_description}</td>
@@ -638,15 +635,13 @@ function PerformanceContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
-                ) : reviews.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No reviews found.</td>
-                  </tr>
-                ) : (
-                  reviews.map((r) => (
+                    <TableSkeleton columns={5} rows={5} />
+                  ) : reviews.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No reviews found.</td>
+                    </tr>
+                  ) : (
+                    reviews.map((r) => (
                     <tr key={r.review_id}>
                       <td>{r.employee_name}</td>
                       <td>{r.reviewer}</td>
@@ -759,15 +754,13 @@ function PerformanceContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
-                ) : feedbacks.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No feedback found.</td>
-                  </tr>
-                ) : (
-                  feedbacks.map((f) => (
+                    <TableSkeleton columns={5} rows={5} />
+                  ) : feedbacks.length === 0 ? (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No feedback found.</td>
+                    </tr>
+                  ) : (
+                    feedbacks.map((f) => (
                     <tr key={f.feedback_id}>
                       <td>{f.employee_name}</td>
                       <td>{f.feedback_text}</td>
