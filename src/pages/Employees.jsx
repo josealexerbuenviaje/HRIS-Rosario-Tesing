@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Content from "../components/Content";
+import { authFetch } from "../auth";
 import "./css_pages/Employees.css";
-
-const API_BASE = import.meta.env.VITE_API_BASE;
 
 export default function Employees() {
   const [departments, setDepartments]   = useState([]);
@@ -12,7 +11,7 @@ export default function Employees() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${API_BASE}/get_departments_with_head.php`)
+    authFetch(`get_departments_with_head.php`)
       .then(r => {
         if (!r.ok) throw new Error(`Server error: ${r.status}`);
         return r.json();
@@ -20,7 +19,7 @@ export default function Employees() {
       .then(json => {
         if (json.status === "success" && json.data.length > 0) {
           setDepartments(json.data);
-          setSelectedDept(json.data[0]); // select first dept by default
+          setSelectedDept(json.data[0]);
         } else {
           setError("No departments found in the database.");
         }

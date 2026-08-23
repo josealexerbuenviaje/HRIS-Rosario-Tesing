@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
 import { useConfirm } from "./useConfirm";
+import TableSkeleton from "./TableSkeleton";
 import "../css_components/ContentArea.css";
+
 
 // ─────────────────────────────────────────────────────────────
 // Shared UI Helpers
@@ -472,7 +474,7 @@ function RecruitmentContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} style={{ textAlign: "center", padding: 20 }}>Loading...</td></tr>
+                  <TableSkeleton columns={6} rows={5} />
                 ) : jobPostings.length === 0 ? (
                   <tr><td colSpan={6} style={{ textAlign: "center", padding: 20 }}>No job postings found.</td></tr>
                 ) : (
@@ -575,7 +577,7 @@ function RecruitmentContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} style={{ textAlign: "center", padding: 20 }}>Loading...</td></tr>
+                  <TableSkeleton columns={6} rows={5} />
                 ) : appointments.length === 0 ? (
                   <tr><td colSpan={6} style={{ textAlign: "center", padding: 20 }}>No appointments scheduled.</td></tr>
                 ) : (
@@ -728,7 +730,7 @@ function RecruitmentContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={5} style={{ textAlign: "center", padding: 20 }}>Loading...</td></tr>
+                  <TableSkeleton columns={5} rows={5} />
                 ) : applicants.length === 0 ? (
                   <tr><td colSpan={5} style={{ textAlign: "center", padding: 20 }}>No applicants found.</td></tr>
                 ) : (
@@ -836,7 +838,7 @@ function RecruitmentContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={7} style={{ textAlign: "center", padding: 20 }}>Loading...</td></tr>
+                  <TableSkeleton columns={7} rows={5} />
                 ) : interviewResults.length === 0 ? (
                   <tr><td colSpan={7} style={{ textAlign: "center", padding: 20 }}>No results found.</td></tr>
                 ) : (
@@ -897,7 +899,7 @@ function RecruitmentContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} style={{ textAlign: "center", padding: 20 }}>Loading...</td></tr>
+                  <TableSkeleton columns={6} rows={5} />
                 ) : screeningList.length === 0 ? (
                   <tr><td colSpan={6} style={{ textAlign: "center", padding: 20 }}>No applicants in screening.</td></tr>
                 ) : (
