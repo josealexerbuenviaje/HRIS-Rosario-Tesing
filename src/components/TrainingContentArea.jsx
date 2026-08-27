@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
 import { useConfirm } from "./useConfirm";
 import "../css_components/ContentArea.css";
+import TableSkeleton from "./TableSkeleton";
 
 // ─────────────────────────────────────────────────────────────
 // Shared UI Helpers
@@ -444,9 +445,7 @@ function TrainingContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
+                  <TableSkeleton columns={5} rows={5} />
                 ) : courses.length === 0 ? (
                   <tr>
                     <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No courses found.</td>
@@ -559,15 +558,13 @@ function TrainingContentArea() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
-                ) : sessions.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: "center", padding: 20 }}>No sessions found.</td>
-                  </tr>
-                ) : (
-                  sessions.map((s) => (
+                    <TableSkeleton columns={6} rows={5} />
+                  ) : sessions.length === 0 ? (
+                    <tr>
+                      <td colSpan="6" style={{ textAlign: "center", padding: 20 }}>No sessions found.</td>
+                    </tr>
+                  ) : (
+                    sessions.map((s) => (
                     <tr key={s.session_id}>
                       <td>{s.course_title}</td>
                       <td>{s.session_date}</td>
@@ -653,16 +650,14 @@ function TrainingContentArea() {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
-                ) : enrollments.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No enrollments found.</td>
-                  </tr>
-                ) : (
-                  enrollments.map((en) => (
+                  {loading ? (
+                      <TableSkeleton columns={5} rows={5} />
+                    ) : enrollments.length === 0 ? (
+                      <tr>
+                        <td colSpan="5" style={{ textAlign: "center", padding: 20 }}>No enrollments found.</td>
+                      </tr>
+                    ) : (
+                      enrollments.map((en) => (
                     <tr key={en.enrollment_id}>
                       <td>{en.employee_name}</td>
                       <td>{en.course_title}</td>
@@ -776,16 +771,14 @@ function TrainingContentArea() {
                 </tr>
               </thead>
               <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: "center", padding: 20 }}>Loading...</td>
-                  </tr>
-                ) : certifications.length === 0 ? (
-                  <tr>
-                    <td colSpan="6" style={{ textAlign: "center", padding: 20 }}>No certifications found.</td>
-                  </tr>
-                ) : (
-                  certifications.map((cert) => (
+                  {loading ? (
+                      <TableSkeleton columns={6} rows={5} />
+                    ) : certifications.length === 0 ? (
+                      <tr>
+                        <td colSpan="6" style={{ textAlign: "center", padding: 20 }}>No certifications found.</td>
+                      </tr>
+                    ) : (
+                      certifications.map((cert) => (
                     <tr key={cert.certification_id}>
                       <td>{cert.employee_name}</td>
                       <td>{cert.certification_name}</td>
