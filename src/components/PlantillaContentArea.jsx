@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { authFetch } from '../auth';
 import { useConfirm } from "./useConfirm";
 import '../css_components/ContentArea.css';
+import TableSkeleton from "./TableSkeleton";
 
 // ── Shared ────────────────────────────────────────────────────────────────────
 const ApiMsg = ({ msg }) => msg
@@ -268,32 +269,32 @@ const handleDelete = async (posId) => {
         </thead>
         <tbody>
           {loading
-            ? <tr><td colSpan={8} style={{ textAlign:'center', color:'#94a3b8', padding:'24px' }}>Loading…</td></tr>
+            ? <TableSkeleton columns={8} rows={5} />
             : positions.length === 0
               ? <tr><td colSpan={8} style={{ textAlign:'center', color:'#94a3b8', padding:'24px' }}>No positions found.</td></tr>
               : positions.map(pos => (
-                <tr key={pos.position_id}>
-                  <td><span style={{ fontFamily:'monospace', fontSize:12 }}>{pos.item_number}</span></td>
-                  <td style={{ fontWeight:600 }}>{pos.position_title}</td>
-                  <td>{pos.dept_name}</td>
-                  <td style={{ textAlign:'center' }}>SG-{pos.salary_grade}</td>
-                  <td>₱{Number(pos.monthly_salary).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
-                  <td style={{ fontSize:12.5, color: pos.incumbent_name ? '#0f172a' : '#94a3b8' }}>
-                    {pos.incumbent_name ?? '—'}
-                  </td>
-                  <td><StatusBadge status={pos.status} /></td>
-                  <td>
-                    <div style={{ display:'flex', gap:6, justifyContent:'flex-end' }}>
-                      <button className="btn-sm btn-sm--edit" onClick={() => setModal(pos)}>Edit</button>
-                      <button className="btn-sm btn-sm--delete"
-                        disabled={deleting === pos.position_id}
-                        onClick={() => handleDelete(pos.position_id)}>
-                        {deleting === pos.position_id ? '…' : 'Remove'}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+              <tr key={pos.position_id}>
+                <td><span style={{ fontFamily:'monospace', fontSize:12 }}>{pos.item_number}</span></td>
+                <td style={{ fontWeight:600 }}>{pos.position_title}</td>
+                <td>{pos.dept_name}</td>
+                <td style={{ textAlign:'center' }}>SG-{pos.salary_grade}</td>
+                <td>₱{Number(pos.monthly_salary).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                <td style={{ fontSize:12.5, color: pos.incumbent_name ? '#0f172a' : '#94a3b8' }}>
+                  {pos.incumbent_name ?? '—'}
+                </td>
+                <td><StatusBadge status={pos.status} /></td>
+                <td>
+                  <div style={{ display:'flex', gap:6, justifyContent:'flex-end' }}>
+                    <button className="btn-sm btn-sm--edit" onClick={() => setModal(pos)}>Edit</button>
+                    <button className="btn-sm btn-sm--delete"
+                      disabled={deleting === pos.position_id}
+                      onClick={() => handleDelete(pos.position_id)}>
+                      {deleting === pos.position_id ? '…' : 'Remove'}
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))
           }
         </tbody>
       </table>
@@ -369,7 +370,7 @@ function TabSalaries() {
           </thead>
           <tbody>
             {loading
-              ? <tr><td colSpan={10} style={{ textAlign:'center', color:'#94a3b8', padding:'24px' }}>Loading…</td></tr>
+              ? <TableSkeleton columns={10} rows={5} />
               : salaries.map(sal => (
                 <tr key={sal.salary_grade}>
                   <td><strong>SG-{sal.salary_grade}</strong></td>
@@ -483,7 +484,7 @@ function TabVacancies() {
         </thead>
         <tbody>
           {loading
-            ? <tr><td colSpan={8} style={{ textAlign:'center', color:'#94a3b8', padding:'24px' }}>Loading…</td></tr>
+            ? <TableSkeleton columns={8} rows={5} />
             : vacancies.length === 0
               ? <tr><td colSpan={8} style={{ textAlign:'center', color:'#94a3b8', padding:'24px' }}>No vacancies found.</td></tr>
               : vacancies.map(v => (
@@ -667,7 +668,7 @@ function TabUpdates() {
         </thead>
         <tbody>
           {loading
-            ? <tr><td colSpan={4} style={{ textAlign:'center', color:'#94a3b8', padding:'24px' }}>Loading…</td></tr>
+            ? <TableSkeleton columns={4} rows={5} />
             : updates.length === 0
               ? <tr><td colSpan={4} style={{ textAlign:'center', color:'#94a3b8', padding:'24px' }}>No updates yet.</td></tr>
               : updates.map(u => (
