@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { authFetch } from '../auth';
+import { useToast } from './useToast';
 import '../css_components/ContentArea.css';
 
 // ── Shared helpers ────────────────────────────────────────────────────────────
@@ -13,19 +14,15 @@ const StatusBadge = ({ status }) => {
   return <span className={map[status] ?? 'status-badge'}>{status}</span>;
 };
 
-const ApiMsg = ({ msg }) => msg
-  ? <div className={`api-msg api-msg--${msg.type}`}>{msg.text}</div>
-  : null;
-
 // ── TAB: File Leave ───────────────────────────────────────────────────────────
 function TabFileLeave() {
+  const { showToast } = useToast();
   const [employees,   setEmployees]   = useState([]);
   const [leaveTypes,  setLeaveTypes]  = useState([]);
   const [empSearch,   setEmpSearch]   = useState('');
   const [requests,    setRequests]    = useState([]);
   const [loading,     setLoading]     = useState(false);
   const [submitting,  setSubmitting]  = useState(false);
-  const [apiMsg,      setApiMsg]      = useState(null);
 
   const [form, setForm] = useState({
     employee_id: '', leave_type_id: '', start_date: '',
@@ -79,7 +76,6 @@ function TabFileLeave() {
   const handleChange = e => {
     const { name, value } = e.target;
     setForm(p => ({ ...p, [name]: value }));
-    setApiMsg(null);
   };
 
   const handleSelectEmp = emp => {
@@ -90,7 +86,7 @@ function TabFileLeave() {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    setSubmitting(true); setApiMsg(null);
+    setSubmitting(true);
     try {
       const res  = await authFetch(`leave_api.php?action=file_leave`, {
         method: 'POST',
@@ -98,28 +94,26 @@ function TabFileLeave() {
       });
       const json = await res.json();
       if (json.status === 'success') {
-        setApiMsg({ type: 'success', text: `${json.message} (${json.days} working day/s)` });
+        showToast('Leave request filed', 'success', `${json.message} (${json.days} working day/s)`);
         setForm({ employee_id:'', leave_type_id:'', start_date:'', end_date:'', reason:'' });
         setEmpSearch('');
         loadRequests();
       } else {
-        setApiMsg({ type: 'error', text: json.message });
+        showToast('Could not file leave request', 'error', json.message);
       }
-    } catch { setApiMsg({ type: 'error', text: 'Could not reach server.' }); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setSubmitting(false); }
   };
 
   const handleReset = () => {
     setForm({ employee_id:'', leave_type_id:'', start_date:'', end_date:'', reason:'' });
-    setEmpSearch(''); setEmployees([]); setApiMsg(null);
+    setEmpSearch(''); setEmployees([]);
   };
 
   return (
     <div className="tab-content">
       <h2>File Leave</h2>
       <p>File a leave request on behalf of an employee. All fields marked with * are required.</p>
-
-      <ApiMsg msg={apiMsg} />
 
       <form onSubmit={handleSubmit} className="leave-form">
 
@@ -213,10 +207,10 @@ function TabFileLeave() {
 
 // ── TAB: Approvals ────────────────────────────────────────────────────────────
 function TabApprovals() {
+  const { showToast } = useToast();
   const [records,   setRecords]   = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [acting,    setActing]    = useState(null);
-  const [apiMsg,    setApiMsg]    = useState(null);
   const [status,    setStatus]    = useState('Pending');
   const [search,    setSearch]    = useState('');
   const [comment,   setComment]   = useState('');
@@ -235,7 +229,7 @@ function TabApprovals() {
   useEffect(() => { load(); }, [load]);
 
   const handleAction = async (leave_id, action) => {
-    setActing(leave_id); setApiMsg(null);
+    setActing(leave_id);
     try {
       const res  = await authFetch(`leave_api.php?action=update_status`, {
         method: 'POST',
@@ -244,11 +238,11 @@ function TabApprovals() {
       const json = await res.json();
       if (json.status === 'success') {
         setRecords(p => p.map(r => r.leave_id === leave_id ? { ...r, status: action } : r));
-        setApiMsg({ type: 'success', text: json.message });
+        showToast(action === 'Approved' ? 'Request approved' : 'Request rejected', 'success', json.message);
       } else {
-        setApiMsg({ type: 'error', text: json.message });
+        showToast('Could not update request', 'error', json.message);
       }
-    } catch { setApiMsg({ type: 'error', text: 'Could not reach server.' }); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setActing(null); }
   };
 
@@ -267,8 +261,6 @@ function TabApprovals() {
     <div className="tab-content">
       <h2>Approvals</h2>
       <p>Review and approve or reject pending leave requests.</p>
-
-      <ApiMsg msg={apiMsg} />
 
       <div className="filters">
         <select value={status} onChange={e => setStatus(e.target.value)}>
@@ -336,15 +328,15 @@ function TabApprovals() {
 
 // ── TAB: Leave Reports ────────────────────────────────────────────────────────
 function TabLeaveReports() {
+  const { showToast } = useToast();
   const [from,       setFrom]       = useState('');
   const [to,         setTo]         = useState('');
   const [type,       setType]       = useState('individual');
   const [generating, setGenerating] = useState(false);
-  const [msg,        setMsg]        = useState(null);
 
   const handleGenerate = async () => {
-    if (!from || !to) { setMsg({ type:'error', text:'Please select a date range.' }); return; }
-    setGenerating(true); setMsg(null);
+    if (!from || !to) { showToast('Please select a date range', 'warning'); return; }
+    setGenerating(true);
     try {
       const p   = new URLSearchParams({ action:'generate_report', type, from, to, format:'csv' });
       const res = await authFetch(`leave_api.php?${p}`);
@@ -356,15 +348,14 @@ function TabLeaveReports() {
       a.download = `leave_report_${from}_to_${to}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-      setMsg({ type:'success', text:'Report downloaded.' });
-    } catch { setMsg({ type:'error', text:'Failed to generate report.' }); }
+      showToast('Report downloaded', 'success');
+    } catch { showToast('Could not generate report', 'error'); }
     finally { setGenerating(false); }
   };
 
   return (
     <div className="tab-content">
       <h2>Leave Reports</h2>
-      <ApiMsg msg={msg} />
       <form className="report-form" onSubmit={e => e.preventDefault()}>
         <label>Report Type</label>
         <select value={type} onChange={e => setType(e.target.value)}>
