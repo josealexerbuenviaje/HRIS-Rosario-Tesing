@@ -17,48 +17,53 @@ import TrainingPage  from "./pages/Trainingpage";
 import ReportsPage      from "./pages/Reportspage";
 
 import { isLoggedIn, initAuth } from "./auth";
+import { ToastProvider } from "./components/ToastContext";
+import { ToastContainer } from "./components/ToastContainer";
 
 // Resume token auto-refresh if user is already logged in
 initAuth();
 
 function App() {
   return (
-    <Router>
-      <Routes>
+    <ToastProvider>
+      <Router>
+        <Routes>
 
-        {/* Default — redirect based on JWT validity */}
-        <Route
-          path="/"
-          element={isLoggedIn() ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />}
-        />
+          {/* Default — redirect based on JWT validity */}
+          <Route
+            path="/"
+            element={isLoggedIn() ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />}
+          />
 
-        {/* Login — redirect to dashboard if already logged in */}
-        <Route
-          path="/login"
-          element={isLoggedIn() ? <Navigate to="/dashboard" replace /> : <Login />}
-        />
+          {/* Login — redirect to dashboard if already logged in */}
+          <Route
+            path="/login"
+            element={isLoggedIn() ? <Navigate to="/dashboard" replace /> : <Login />}
+          />
 
-        {/* Protected routes — all wrapped in ProtectedRoute + DashboardLayout */}
-        <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-          <Route path="/dashboard"                    element={<Dashboard />} />
-          <Route path="/Employees"                    element={<Employees />} />
-          <Route path="/employees/Emp_contractual"    element={<EmpContractual />} />
-          <Route path="/employees/jo_contractual"     element={<JOContractual />} />
-          <Route path="/employees/ojt_contractual"    element={<OJTContractual />} />
-          <Route path="/Attendance"                   element={<Attendance />} />
-          <Route path="/Leave_page"                   element={<Leavepage />} />
-          <Route path="/Plantilla"                    element={<Plantilla />} />
-          <Route path="/Recruitment"                  element={<RecruitmentPage />} />
-          <Route path="/Performance"                  element={<PerformancePage />} />
-          <Route path="/Training"                  element={<TrainingPage />} />
-          <Route path="/Reports"                      element={<ReportsPage />} />
-        </Route>
+          {/* Protected routes — all wrapped in ProtectedRoute + DashboardLayout */}
+          <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+            <Route path="/dashboard"                    element={<Dashboard />} />
+            <Route path="/Employees"                    element={<Employees />} />
+            <Route path="/employees/Emp_contractual"    element={<EmpContractual />} />
+            <Route path="/employees/jo_contractual"     element={<JOContractual />} />
+            <Route path="/employees/ojt_contractual"    element={<OJTContractual />} />
+            <Route path="/Attendance"                   element={<Attendance />} />
+            <Route path="/Leave_page"                   element={<Leavepage />} />
+            <Route path="/Plantilla"                    element={<Plantilla />} />
+            <Route path="/Recruitment"                  element={<RecruitmentPage />} />
+            <Route path="/Performance"                  element={<PerformancePage />} />
+            <Route path="/Training"                  element={<TrainingPage />} />
+            <Route path="/Reports"                      element={<ReportsPage />} />
+          </Route>
 
-        {/* Catch-all — redirect unknown routes */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Catch-all — redirect unknown routes */}
+          <Route path="*" element={<Navigate to="/" replace />} />
 
-      </Routes>
-    </Router>
+        </Routes>
+      </Router>
+      <ToastContainer />
+    </ToastProvider>
   );
 }
 
