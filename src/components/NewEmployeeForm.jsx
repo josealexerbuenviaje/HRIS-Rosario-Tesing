@@ -3,10 +3,6 @@ import '../css_components/NewEmployeeForm.css';
 import { authFetch } from '../auth';
 import { useToast } from './useToast';
 
-// ─── CONFIG ───────────────────────────────────────────────────────────────────
-const API_BASE = import.meta.env.VITE_API_BASE;
-
-
 const APPOINTMENT_TYPES = [
   'Permanent', 'Temporary', 'Casual', 'Contractual',
   'Co-terminus', 'Elective', 'Career Executive Service',
@@ -238,7 +234,7 @@ function NewEmployeeForm({ isOpen, onClose }) {
 
     // Fetch department tree from DB
     setDeptLoading(true);
-    fetch(`${API_BASE}/get_dept_for_employee.php`)
+    authFetch(`get_dept_for_employee.php`)
       .then(r => r.json())
       .then(json => {
         if (json.status === 'success' && json.data.length > 0) {
