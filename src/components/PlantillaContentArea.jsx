@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { authFetch } from '../auth';
 import { useConfirm } from "./useConfirm";
+import { useToast } from "./useToast";
 import '../css_components/ContentArea.css';
 import TableSkeleton from "./TableSkeleton";
 
 // ── Shared ────────────────────────────────────────────────────────────────────
-const ApiMsg = ({ msg }) => msg
-  ? <div className={`api-msg api-msg--${msg.type}`}>{msg.text}</div>
-  : null;
-
 const StatusBadge = ({ status }) => {
   const map = { Vacant: 'plt-badge--vacant', Occupied: 'plt-badge--occupied',
                 Open: 'plt-badge--open', Closed: 'plt-badge--closed' };
@@ -31,6 +28,7 @@ function Field({ label, name, required, type = 'text', children, form, errors, o
 // ADD / EDIT POSITION MODAL
 // ─────────────────────────────────────────────────────────────────────────────
 function PositionModal({ position, depts, onClose, onSaved }) {
+  const { showToast } = useToast();
   const isEdit = !!position?.position_id;
   const EMPTY  = { position_title:'', dept_id:'', salary_grade:'', monthly_salary:'',
                    item_number:'', status:'Vacant', remarks:'' };
@@ -38,7 +36,6 @@ function PositionModal({ position, depts, onClose, onSaved }) {
   const [form,   setForm]   = useState(isEdit ? { ...position } : EMPTY);
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState({});
-  const [apiMsg, setApiMsg] = useState(null);
 
   useEffect(() => {
     const h = e => { if (e.key === 'Escape') onClose(); };
@@ -66,7 +63,7 @@ function PositionModal({ position, depts, onClose, onSaved }) {
     e.preventDefault();
     const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
-    setSaving(true); setApiMsg(null);
+    setSaving(true);
     const action = isEdit ? 'update_position' : 'add_position';
     try {
       const res  = await authFetch(`plantilla_api.php?action=${action}`, {
@@ -74,12 +71,12 @@ function PositionModal({ position, depts, onClose, onSaved }) {
       });
       const json = await res.json();
       if (json.status === 'success') {
-        setApiMsg({ type: 'success', text: json.message });
+        showToast(isEdit ? 'Position updated' : 'Position added', 'success', json.message);
         setTimeout(() => { onSaved(); onClose(); }, 700);
       } else {
-        setApiMsg({ type: 'error', text: json.message });
+        showToast('Could not save position', 'error', json.message);
       }
-    } catch { setApiMsg({ type: 'error', text: 'Could not reach server.' }); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setSaving(false); }
   };
 
@@ -96,7 +93,6 @@ function PositionModal({ position, depts, onClose, onSaved }) {
         </div>
 
         <form onSubmit={handleSubmit} autoComplete="off">
-          <ApiMsg msg={apiMsg} />
           <div className="plt-modal-body">
             <p className="plt-section-title">Position Info</p>
             <div className="plt-form-grid plt-form-grid--2">
@@ -162,6 +158,7 @@ function PositionModal({ position, depts, onClose, onSaved }) {
 // TAB: Positions
 // ─────────────────────────────────────────────────────────────────────────────
 function TabPositions() {
+  const { showToast } = useToast();
   const [positions, setPositions] = useState([]);
   const [depts,     setDepts]     = useState([]);
   const [loading,   setLoading]   = useState(true);
@@ -170,7 +167,6 @@ function TabPositions() {
   const [statusF,   setStatusF]   = useState('All');
   const [modal,     setModal]     = useState(null); // null | 'add' | position obj
   const [deleting,  setDeleting]  = useState(null);
-  const [apiMsg,    setApiMsg]    = useState(null);
   const { confirm, ConfirmDialog } = useConfirm();
   // Load depts once
   useEffect(() => {
@@ -195,7 +191,7 @@ function TabPositions() {
 const handleDelete = async (posId) => {
   const ok = await confirm("Remove this position?");
   if (!ok) return;
-  setDeleting(posId); setApiMsg(null);
+  setDeleting(posId);
     try {
       const res  = await authFetch(`plantilla_api.php?action=delete_position`, {
         method: 'POST', body: JSON.stringify({ position_id: posId }),
@@ -203,11 +199,11 @@ const handleDelete = async (posId) => {
       const json = await res.json();
       if (json.status === 'success') {
         setPositions(p => p.filter(x => x.position_id !== posId));
-        setApiMsg({ type: 'success', text: json.message });
+        showToast('Position removed', 'success', json.message);
       } else {
-        setApiMsg({ type: 'error', text: json.message });
+        showToast('Could not remove position', 'error', json.message);
       }
-    } catch { setApiMsg({ type: 'error', text: 'Could not reach server.' }); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setDeleting(null); }
   };
 
@@ -236,8 +232,6 @@ const handleDelete = async (posId) => {
         <span className="plt-chip plt-chip--occupied">Occupied: {occupied}</span>
         <span className="plt-chip plt-chip--vacant">Vacant: {vacant}</span>
       </div>
-
-      <ApiMsg msg={apiMsg} />
 
       {/* Filters */}
       <div className="filters">
@@ -316,12 +310,12 @@ const handleDelete = async (posId) => {
 // TAB: Salaries
 // ─────────────────────────────────────────────────────────────────────────────
 function TabSalaries() {
+  const { showToast } = useToast();
   const [salaries, setSalaries] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [editRow,  setEditRow]  = useState(null);
   const [editVals, setEditVals] = useState({});
   const [saving,   setSaving]   = useState(false);
-  const [apiMsg,   setApiMsg]   = useState(null);
 
   useEffect(() => {
     authFetch(`plantilla_api.php?action=get_salaries`)
@@ -337,7 +331,7 @@ function TabSalaries() {
   };
 
   const handleSave = async sg => {
-    setSaving(true); setApiMsg(null);
+    setSaving(true);
     try {
       const res  = await authFetch(`plantilla_api.php?action=update_salary`, {
         method: 'POST', body: JSON.stringify({ salary_grade: sg, ...editVals }),
@@ -346,11 +340,11 @@ function TabSalaries() {
       if (json.status === 'success') {
         setSalaries(p => p.map(s => s.salary_grade === sg ? { ...s, ...editVals } : s));
         setEditRow(null);
-        setApiMsg({ type: 'success', text: 'Salary schedule updated.' });
+        showToast('Salary schedule updated', 'success');
       } else {
-        setApiMsg({ type: 'error', text: json.message });
+        showToast('Could not update salary schedule', 'error', json.message);
       }
-    } catch { setApiMsg({ type: 'error', text: 'Could not reach server.' }); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setSaving(false); }
   };
 
@@ -358,7 +352,6 @@ function TabSalaries() {
     <div className="tab-content">
       <h2>Salaries</h2>
       <p>DBM-approved salary schedule. Click <strong>Update</strong> on any row to edit step amounts.</p>
-      <ApiMsg msg={apiMsg} />
       <div style={{ overflowX:'auto' }}>
         <table className="data-table">
           <thead>
@@ -412,11 +405,11 @@ function TabSalaries() {
 // TAB: Vacancies
 // ─────────────────────────────────────────────────────────────────────────────
 function TabVacancies() {
+  const { showToast } = useToast();
   const [vacancies, setVacancies] = useState([]);
   const [loading,   setLoading]   = useState(true);
   const [search,    setSearch]    = useState('');
   const [acting,    setActing]    = useState(null);
-  const [apiMsg,    setApiMsg]    = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -431,32 +424,32 @@ function TabVacancies() {
   useEffect(() => { load(); }, [load]);
 
   const handlePost = async posId => {
-    setActing(posId); setApiMsg(null);
+    setActing(posId);
     try {
       const res  = await authFetch(`plantilla_api.php?action=post_vacancy`, {
         method: 'POST', body: JSON.stringify({ position_id: posId }),
       });
       const json = await res.json();
       if (json.status === 'success') {
-        setApiMsg({ type: 'success', text: json.message });
+        showToast('Vacancy posted', 'success', json.message);
         load();
-      } else { setApiMsg({ type: 'error', text: json.message }); }
-    } catch { setApiMsg({ type: 'error', text: 'Could not reach server.' }); }
+      } else { showToast('Could not post vacancy', 'error', json.message); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setActing(null); }
   };
 
   const handleClose = async vacId => {
-    setActing(vacId); setApiMsg(null);
+    setActing(vacId);
     try {
       const res  = await authFetch(`plantilla_api.php?action=close_vacancy`, {
         method: 'POST', body: JSON.stringify({ vacancy_id: vacId }),
       });
       const json = await res.json();
       if (json.status === 'success') {
-        setApiMsg({ type: 'success', text: json.message });
+        showToast('Vacancy closed', 'success', json.message);
         load();
-      } else { setApiMsg({ type: 'error', text: json.message }); }
-    } catch { setApiMsg({ type: 'error', text: 'Could not reach server.' }); }
+      } else { showToast('Could not close vacancy', 'error', json.message); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setActing(null); }
   };
 
@@ -464,7 +457,6 @@ function TabVacancies() {
     <div className="tab-content">
       <h2>Vacancies</h2>
       <p>Track and post vacant plantilla positions for recruitment.</p>
-      <ApiMsg msg={apiMsg} />
       <div className="filters">
         <input type="text" placeholder="Search by position title…"
           value={search} onChange={e => setSearch(e.target.value)} />
@@ -523,14 +515,14 @@ function TabVacancies() {
 // TAB: Reports
 // ─────────────────────────────────────────────────────────────────────────────
 function TabReports() {
+  const { showToast } = useToast();
   const [type,       setType]       = useState('position_summary');
   const [from,       setFrom]       = useState('');
   const [to,         setTo]         = useState('');
   const [generating, setGenerating] = useState(false);
-  const [msg,        setMsg]        = useState(null);
 
   const handleGenerate = async () => {
-    setGenerating(true); setMsg(null);
+    setGenerating(true);
     try {
       const p   = new URLSearchParams({ action:'generate_report', type, from, to, format:'csv' });
       const res = await authFetch(`plantilla_api.php?${p}`);
@@ -542,8 +534,8 @@ function TabReports() {
       a.download = `plantilla_${type}.csv`;
       a.click();
       URL.revokeObjectURL(url);
-      setMsg({ type:'success', text:'Report downloaded.' });
-    } catch { setMsg({ type:'error', text:'Failed to generate report.' }); }
+      showToast('Report downloaded', 'success');
+    } catch { showToast('Failed to generate report', 'error'); }
     finally { setGenerating(false); }
   };
 
@@ -551,7 +543,6 @@ function TabReports() {
     <div className="tab-content">
       <h2>Reports</h2>
       <p>Generate plantilla reports for CSC submission and auditing.</p>
-      <ApiMsg msg={msg} />
       <form className="report-form" onSubmit={e => e.preventDefault()}>
         <label>Report Type</label>
         <select value={type} onChange={e => setType(e.target.value)}>
@@ -575,12 +566,12 @@ function TabReports() {
 // TAB: Updates
 // ─────────────────────────────────────────────────────────────────────────────
 function TabUpdates() {
+  const { showToast } = useToast();
   const [updates,  setUpdates]  = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [form,     setForm]     = useState({ change_type:'', description:'' });
   const [saving,   setSaving]   = useState(false);
-  const [apiMsg,   setApiMsg]   = useState(null);
 
   const CHANGE_TYPES = ['New Position','Reclassification','Abolition','Salary Update','Vacancy Posted','Other'];
 
@@ -595,16 +586,16 @@ function TabUpdates() {
   const handleLog = async e => {
     e.preventDefault();
     if (!form.change_type || !form.description) {
-      setApiMsg({ type:'error', text:'Both fields are required.' }); return;
+      showToast('Both fields are required', 'warning'); return;
     }
-    setSaving(true); setApiMsg(null);
+    setSaving(true);
     try {
       const res  = await authFetch(`plantilla_api.php?action=log_update`, {
         method: 'POST', body: JSON.stringify(form),
       });
       const json = await res.json();
       if (json.status === 'success') {
-        setApiMsg({ type:'success', text:'Update logged.' });
+        showToast('Update logged', 'success');
         setForm({ change_type:'', description:'' });
         setShowForm(false);
         // Prepend to list
@@ -613,8 +604,8 @@ function TabUpdates() {
           description: form.description, created_at: new Date().toISOString().slice(0,19).replace('T',' '),
           changed_by: 'You',
         }, ...p]);
-      } else { setApiMsg({ type:'error', text: json.message }); }
-    } catch { setApiMsg({ type:'error', text:'Could not reach server.' }); }
+      } else { showToast('Could not log update', 'error', json.message); }
+    } catch { showToast('Could not reach server', 'error'); }
     finally { setSaving(false); }
   };
 
@@ -629,8 +620,6 @@ function TabUpdates() {
           {showForm ? '✕ Cancel' : '+ Log Update'}
         </button>
       </div>
-
-      <ApiMsg msg={apiMsg} />
 
       {showForm && (
         <form className="plt-log-form" onSubmit={handleLog}>

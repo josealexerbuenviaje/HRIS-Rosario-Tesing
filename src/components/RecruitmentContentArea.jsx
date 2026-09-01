@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
 import { useConfirm } from "./useConfirm";
+import { useToast } from "./useToast";
 import TableSkeleton from "./TableSkeleton";
 import "../css_components/ContentArea.css";
 
@@ -8,9 +9,6 @@ import "../css_components/ContentArea.css";
 // ─────────────────────────────────────────────────────────────
 // Shared UI Helpers
 // ─────────────────────────────────────────────────────────────
-
-const ApiMsg = ({ msg }) =>
-  msg ? <div className={`api-msg api-msg--${msg.type}`}>{msg.text}</div> : null;
 
 // Safely parse JSON — returns null and logs if the server sent HTML/error page
 async function safeJson(res) {
@@ -28,6 +26,7 @@ async function safeJson(res) {
 }
 
 function RecruitmentContentArea() {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState("jobPostings");
 
   // Shared dropdown data
@@ -38,9 +37,8 @@ function RecruitmentContentArea() {
   const [checklist, setChecklist]             = useState([]);
   const [screeningList, setScreeningList]     = useState([]);
 
-  // Loading & messages
+  // Loading
   const [loading, setLoading]   = useState(false);
-  const [apiMsg, setApiMsg]     = useState(null);
 
   // Shared search
   const [search, setSearch] = useState("");
@@ -92,8 +90,8 @@ function RecruitmentContentArea() {
     try {
       const p    = new URLSearchParams({ search });
       const json = await authFetch(`job_postings.php?${p}`).then((r) => safeJson(r));
-      if (json?.success) setJobPostings(json.data || []); else if (json) setApiMsg({ type: "error", text: json.error || "Failed to load job postings." });
-    } catch (e) { setApiMsg({ type: "error", text: "Could not reach server." }); }
+      if (json?.success) setJobPostings(json.data || []); else if (json) showToast("Failed to load job postings", "error", json.error);
+    } catch (e) { showToast("Could not reach server", "error"); }
     finally { setLoading(false); }
   }, [search]);
 
@@ -102,8 +100,8 @@ function RecruitmentContentArea() {
     try {
       const p    = new URLSearchParams({ search });
       const json = await authFetch(`applicants.php?${p}`).then((r) => safeJson(r));
-      if (json?.success) setApplicants(json.data || []); else if (json) setApiMsg({ type: "error", text: json.error || "Failed to load applicants." });
-    } catch (e) { setApiMsg({ type: "error", text: "Could not reach server." }); }
+      if (json?.success) setApplicants(json.data || []); else if (json) showToast("Failed to load applicants", "error", json.error);
+    } catch (e) { showToast("Could not reach server", "error"); }
     finally { setLoading(false); }
   }, [search]);
 
@@ -111,8 +109,8 @@ function RecruitmentContentArea() {
     setLoading(true);
     try {
       const json = await authFetch("interview_results.php").then((r) => safeJson(r));
-      if (json?.success) setInterviewResults(json.data || []); else if (json) setApiMsg({ type: "error", text: json.error || "Failed to load interview results." });
-    } catch (e) { setApiMsg({ type: "error", text: "Could not reach server." }); }
+      if (json?.success) setInterviewResults(json.data || []); else if (json) showToast("Failed to load interview results", "error", json.error);
+    } catch (e) { showToast("Could not reach server", "error"); }
     finally { setLoading(false); }
   }, []);
 
@@ -120,8 +118,8 @@ function RecruitmentContentArea() {
     setLoading(true);
     try {
       const json = await authFetch("appointments.php").then((r) => safeJson(r));
-      if (json?.success) setAppointments(json.data || []); else if (json) setApiMsg({ type: "error", text: json.error || "Failed to load appointments." });
-    } catch (e) { setApiMsg({ type: "error", text: "Could not reach server." }); }
+      if (json?.success) setAppointments(json.data || []); else if (json) showToast("Failed to load appointments", "error", json.error);
+    } catch (e) { showToast("Could not reach server", "error"); }
     finally { setLoading(false); }
   }, []);
 
@@ -132,7 +130,7 @@ function RecruitmentContentArea() {
         `appointments.php?action=checklist&applicant_id=${applicant_id}`
       ).then((r) => safeJson(r));
       if (json?.success) setChecklist(json.data || []);
-    } catch (e) { setApiMsg({ type: "error", text: "Could not reach server." }); }
+    } catch (e) { showToast("Could not reach server", "error"); }
   }, []);
 
   const loadScreening = useCallback(async () => {
@@ -140,14 +138,13 @@ function RecruitmentContentArea() {
     try {
       const p    = new URLSearchParams({ search });
       const json = await authFetch(`screening_report.php?${p}`).then((r) => safeJson(r));
-      if (json?.success) setScreeningList(json.data || []); else if (json) setApiMsg({ type: "error", text: json.error || "Failed to load screening list." });
-    } catch (e) { setApiMsg({ type: "error", text: "Could not reach server." }); }
+      if (json?.success) setScreeningList(json.data || []); else if (json) showToast("Failed to load screening list", "error", json.error);
+    } catch (e) { showToast("Could not reach server", "error"); }
     finally { setLoading(false); }
   }, [search]);
 
   // Auto-load on tab change
   useEffect(() => {
-    setApiMsg(null);
     if (activeTab === "jobPostings")        loadJobPostings();
     if (activeTab === "applicants")         loadApplicants();
     if (activeTab === "interviewResults")   loadInterviewResults();
@@ -160,7 +157,6 @@ function RecruitmentContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitJobPosting = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch("job_postings.php", {
         method: "POST",
@@ -168,14 +164,14 @@ function RecruitmentContentArea() {
       });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: "Job posted successfully." });
+        showToast("Job posted successfully", "success");
         setJobForm({ title: "", department: "", description: "", requirements: "", status: "Open" });
         loadJobPostings();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Failed to post job." });
+        showToast("Failed to post job", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -185,18 +181,17 @@ function RecruitmentContentArea() {
   const closeJobPosting = async (job) => {
     const ok = await confirm("Close this job posting?", { danger: false });
     if (!ok) return;
-    setApiMsg(null);
     try {
       const res  = await authFetch(`job_postings.php?id=${job.id}`, { method: "DELETE" });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: "Job posting closed." });
+        showToast("Job posting closed", "success");
         loadJobPostings();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Failed to close posting." });
+        showToast("Failed to close posting", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -205,7 +200,6 @@ function RecruitmentContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitApplicant = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch("applicants.php", {
         method: "POST",
@@ -213,14 +207,14 @@ function RecruitmentContentArea() {
       });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: "Applicant added." });
+        showToast("Applicant added", "success");
         setApplicantForm({ first_name: "", last_name: "", email: "", phone: "", job_posting_id: "" });
         loadApplicants();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Failed to add applicant." });
+        showToast("Failed to add applicant", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -228,7 +222,6 @@ function RecruitmentContentArea() {
   // Update Applicant Status
   // ─────────────────────────────────────────────────────────────
   const updateApplicantStatus = async (id, status) => {
-    setApiMsg(null);
     try {
       const res  = await authFetch(`applicants.php?id=${id}`, {
         method: "PUT",
@@ -236,13 +229,13 @@ function RecruitmentContentArea() {
       });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: "Status updated." });
+        showToast("Status updated", "success");
         loadApplicants();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Failed to update status." });
+        showToast("Failed to update status", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -251,7 +244,6 @@ function RecruitmentContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitResult = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch("interview_results.php", {
         method: "POST",
@@ -259,14 +251,14 @@ function RecruitmentContentArea() {
       });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: "Interview result recorded." });
+        showToast("Interview result recorded", "success");
         setResultForm({ applicant_id: "", result: "Pass", notes: "", interviewed_at: "" });
         loadInterviewResults();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Failed to save result." });
+        showToast("Failed to save result", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -275,7 +267,6 @@ function RecruitmentContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitAppointment = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch("appointments.php", {
         method: "POST",
@@ -283,14 +274,14 @@ function RecruitmentContentArea() {
       });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: "Appointment scheduled." });
+        showToast("Appointment scheduled", "success");
         setApptForm({ applicant_id: "", type: "Interview", date: "", notes: "" });
         loadAppointments();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Failed to schedule appointment." });
+        showToast("Failed to schedule appointment", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -308,7 +299,7 @@ function RecruitmentContentArea() {
         }),
       });
       loadChecklist(checklistApplicantId);
-    } catch (e) { setApiMsg({ type: "error", text: "Could not reach server." }); }
+    } catch (e) { showToast("Could not reach server", "error"); }
   };
 
   // ─────────────────────────────────────────────────────────────
@@ -317,18 +308,17 @@ function RecruitmentContentArea() {
   const deleteItem = async (endpoint, id, reload) => {
     const ok = await confirm("Are you sure you want to delete this record?");
     if (!ok) return;
-    setApiMsg(null);
     try {
       const res  = await authFetch(`${endpoint}.php?id=${id}`, { method: "DELETE" });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: json.message || "Deleted." });
+        showToast(json.message || "Deleted", "success");
         reload();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Delete failed." });
+        showToast("Delete failed", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -336,7 +326,6 @@ function RecruitmentContentArea() {
   // Screening actions
   // ─────────────────────────────────────────────────────────────
   const screeningAction = async (id, status) => {
-    setApiMsg(null);
     try {
       const res  = await authFetch(`applicants.php?id=${id}`, {
         method: "PUT",
@@ -344,13 +333,13 @@ function RecruitmentContentArea() {
       });
       const json = await safeJson(res);
       if (json?.success) {
-        setApiMsg({ type: "success", text: `Applicant moved to ${status}.` });
+        showToast(`Applicant moved to ${status}`, "success");
         loadScreening();
       } else {
-        setApiMsg({ type: "error", text: json?.error || "Action failed." });
+        showToast("Action failed", "error", json?.error);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -358,12 +347,11 @@ function RecruitmentContentArea() {
   // Export CSV
   // ─────────────────────────────────────────────────────────────
   const exportScreeningCSV = async () => {
-    setApiMsg(null);
     try {
       const p   = new URLSearchParams({ export: "csv", search });
       const res = await authFetch(`screening_report.php?${p}`);
       if (!res || !res.ok) {
-        setApiMsg({ type: "error", text: "Failed to export CSV." });
+        showToast("Failed to export CSV", "error");
         return;
       }
       const blob = await res.blob();
@@ -375,9 +363,9 @@ function RecruitmentContentArea() {
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-      setApiMsg({ type: "success", text: "CSV downloaded." });
+      showToast("CSV downloaded", "success");
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -393,8 +381,6 @@ function RecruitmentContentArea() {
           <div className="tab-content">
             <h2>Job Postings</h2>
             <p>Manage job openings. Post new positions and track status.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form onSubmit={submitJobPosting} className="job-form">
               <label>Job Title *</label>
@@ -509,8 +495,6 @@ function RecruitmentContentArea() {
           <div className="tab-content">
             <h2>Appointment / Onboarding</h2>
             <p>Schedule appointments and manage onboarding checklists.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form className="appointment-form" onSubmit={submitAppointment}>
               <label>Applicant *</label>
@@ -649,8 +633,6 @@ function RecruitmentContentArea() {
             <h2>Applicants</h2>
             <p>View and manage applicant profiles.</p>
 
-            <ApiMsg msg={apiMsg} />
-
             <form className="applicant-form" onSubmit={submitApplicant}>
               <label>First Name *</label>
               <input
@@ -772,8 +754,6 @@ function RecruitmentContentArea() {
             <h2>Interview Results</h2>
             <p>Review interview outcomes and feedback.</p>
 
-            <ApiMsg msg={apiMsg} />
-
             <form className="result-form" onSubmit={submitResult}>
               <label>Applicant *</label>
               <select
@@ -872,8 +852,6 @@ function RecruitmentContentArea() {
           <div className="tab-content">
             <h2>Screening</h2>
             <p>Conduct initial screening of applicants.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <div className="filters">
               <input
