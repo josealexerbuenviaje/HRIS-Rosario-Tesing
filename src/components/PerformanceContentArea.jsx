@@ -1,17 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
 import { useConfirm } from "./useConfirm";
+import { useToast } from "./useToast";
 import "../css_components/ContentArea.css";
 import TableSkeleton from "./TableSkeleton";
 
 
-// ─────────────────────────────────────────────────────────────
-// Shared UI Helpers
-// ─────────────────────────────────────────────────────────────
-const ApiMsg = ({ msg }) =>
-  msg ? <div className={`api-msg api-msg--${msg.type}`}>{msg.text}</div> : null;
-
 function PerformanceContentArea() {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState("evaluations");
 
   // Employees Dropdown
@@ -25,9 +21,6 @@ function PerformanceContentArea() {
 
   // Loading states
   const [loading, setLoading] = useState(false);
-
-  // Messages
-  const [apiMsg, setApiMsg] = useState(null);
 
   // Filters
   const [search, setSearch] = useState("");
@@ -147,7 +140,6 @@ function PerformanceContentArea() {
   // Auto load depending on active tab
   // ─────────────────────────────────────────────────────────────
   useEffect(() => {
-    setApiMsg(null);
     if (activeTab === "evaluations") loadEvaluations();
     if (activeTab === "goals") loadGoals();
     if (activeTab === "reviews") loadReviews();
@@ -182,7 +174,6 @@ function PerformanceContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitEvaluation = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`performance_api.php?action=add_evaluation`, {
         method: "POST",
@@ -190,14 +181,14 @@ function PerformanceContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Evaluation submitted", "success", json.message);
         setEvaluationForm({ employee_id: "", rating: "", comments: "" });
         loadEvaluations();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not submit evaluation", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -206,7 +197,6 @@ function PerformanceContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitGoal = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`performance_api.php?action=add_goal`, {
         method: "POST",
@@ -214,14 +204,14 @@ function PerformanceContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Goal set", "success", json.message);
         setGoalForm({ employee_id: "", goal_description: "", deadline: "" });
         loadGoals();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not set goal", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -229,7 +219,6 @@ function PerformanceContentArea() {
   // Update Goal Status
   // ─────────────────────────────────────────────────────────────
   const updateGoalStatus = async (goal_id, status) => {
-    setApiMsg(null);
     try {
       const res  = await authFetch(`performance_api.php?action=update_goal_status`, {
         method: "POST",
@@ -237,13 +226,13 @@ function PerformanceContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Goal status updated", "success", json.message);
         loadGoals();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not update goal status", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -252,7 +241,6 @@ function PerformanceContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitReview = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`performance_api.php?action=add_review`, {
         method: "POST",
@@ -260,14 +248,14 @@ function PerformanceContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Review submitted", "success", json.message);
         setReviewForm({ employee_id: "", review_text: "", reviewer: "" });
         loadReviews();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not submit review", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -276,7 +264,6 @@ function PerformanceContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitFeedback = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`performance_api.php?action=add_feedback`, {
         method: "POST",
@@ -284,14 +271,14 @@ function PerformanceContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Feedback submitted", "success", json.message);
         setFeedbackForm({ employee_id: "", feedback_text: "", submitted_by: "" });
         loadFeedback();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not submit feedback", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -301,7 +288,6 @@ function PerformanceContentArea() {
   const deleteItem = async (type, idField, idValue) => {
     const ok = await confirm("Are you sure you want to delete this record?");
     if (!ok) return;
-    setApiMsg(null);
     try {
       const res  = await authFetch(`performance_api.php?action=delete_${type}`, {
         method: "POST",
@@ -309,16 +295,16 @@ function PerformanceContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Record deleted", "success", json.message);
         if (type === "evaluation") loadEvaluations();
         if (type === "goal")       loadGoals();
         if (type === "review")     loadReviews();
         if (type === "feedback")   loadFeedback();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not delete record", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -326,7 +312,6 @@ function PerformanceContentArea() {
   // Generate Report CSV
   // ─────────────────────────────────────────────────────────────
   const generateReport = async () => {
-    setApiMsg(null);
     try {
       const p   = new URLSearchParams({
         action: "generate_report",
@@ -344,9 +329,9 @@ function PerformanceContentArea() {
       a.download = `performance_${reportType}_${fromDate}_to_${toDate}.csv`;
       a.click();
       window.URL.revokeObjectURL(url);
-      setApiMsg({ type: "success", text: "Report downloaded." });
+      showToast("Report downloaded", "success");
     } catch {
-      setApiMsg({ type: "error", text: "Failed to generate report." });
+      showToast("Failed to generate report", "error");
     }
   };
 
@@ -360,8 +345,6 @@ function PerformanceContentArea() {
           <div className="tab-content">
             <h2>Evaluations</h2>
             <p>Conduct and record employee performance evaluations.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form onSubmit={submitEvaluation} className="evaluation-form">
               <label>Employee *</label>
@@ -471,8 +454,6 @@ function PerformanceContentArea() {
             <h2>Goals</h2>
             <p>Set and track employee performance goals.</p>
 
-            <ApiMsg msg={apiMsg} />
-
             <form className="goal-form" onSubmit={submitGoal}>
               <label>Employee *</label>
               <select
@@ -575,8 +556,6 @@ function PerformanceContentArea() {
             <h2>Reviews</h2>
             <p>View and manage past performance reviews.</p>
 
-            <ApiMsg msg={apiMsg} />
-
             <form className="review-form" onSubmit={submitReview}>
               <label>Employee *</label>
               <select
@@ -669,8 +648,6 @@ function PerformanceContentArea() {
             <h2>Reports</h2>
             <p>Generate performance reports (CSV download).</p>
 
-            <ApiMsg msg={apiMsg} />
-
             <form className="report-form" onSubmit={(e) => e.preventDefault()}>
               <label>Report Type</label>
               <select value={reportType} onChange={(e) => setReportType(e.target.value)}>
@@ -694,8 +671,6 @@ function PerformanceContentArea() {
           <div className="tab-content">
             <h2>Feedback</h2>
             <p>Collect and manage employee feedback.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form className="feedback-form" onSubmit={submitFeedback}>
               <label>Employee *</label>

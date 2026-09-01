@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { authFetch } from "../auth";
 import { useConfirm } from "./useConfirm";
+import { useToast } from "./useToast";
 import "../css_components/ContentArea.css";
 import TableSkeleton from "./TableSkeleton";
 
-// ─────────────────────────────────────────────────────────────
-// Shared UI Helpers
-// ─────────────────────────────────────────────────────────────
-const ApiMsg = ({ msg }) =>
-  msg ? <div className={`api-msg api-msg--${msg.type}`}>{msg.text}</div> : null;
-
 function TrainingContentArea() {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState("courses");
 
   // Employees Dropdown
@@ -24,9 +20,6 @@ function TrainingContentArea() {
 
   // Loading states
   const [loading, setLoading] = useState(false);
-
-  // Messages
-  const [apiMsg, setApiMsg] = useState(null);
 
   // Filters
   const [search, setSearch] = useState("");
@@ -150,7 +143,6 @@ function TrainingContentArea() {
   // Auto load depending on active tab
   // ─────────────────────────────────────────────────────────────
   useEffect(() => {
-    setApiMsg(null);
     if (activeTab === "courses") loadCourses();
     if (activeTab === "sessions") loadSessions();
     if (activeTab === "enrollments") loadEnrollments();
@@ -185,7 +177,6 @@ function TrainingContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitCourse = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`training_api.php?action=add_course`, {
         method: "POST",
@@ -193,14 +184,14 @@ function TrainingContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Course added", "success", json.message);
         setCourseForm({ title: "", description: "", category: "", duration_hours: "" });
         loadCourses();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not add course", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -209,7 +200,6 @@ function TrainingContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitSession = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`training_api.php?action=add_session`, {
         method: "POST",
@@ -217,14 +207,14 @@ function TrainingContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Session scheduled", "success", json.message);
         setSessionForm({ course_id: "", session_date: "", location: "", trainer: "", capacity: "" });
         loadSessions();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not schedule session", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -233,7 +223,6 @@ function TrainingContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitEnrollment = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`training_api.php?action=add_enrollment`, {
         method: "POST",
@@ -241,14 +230,14 @@ function TrainingContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Employee enrolled", "success", json.message);
         setEnrollmentForm({ employee_id: "", session_id: "" });
         loadEnrollments();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not enroll employee", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -256,7 +245,6 @@ function TrainingContentArea() {
   // Update Enrollment Status
   // ─────────────────────────────────────────────────────────────
   const updateEnrollmentStatus = async (enrollment_id, status) => {
-    setApiMsg(null);
     try {
       const res  = await authFetch(`training_api.php?action=update_enrollment_status`, {
         method: "POST",
@@ -264,13 +252,13 @@ function TrainingContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Enrollment status updated", "success", json.message);
         loadEnrollments();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not update enrollment status", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -279,7 +267,6 @@ function TrainingContentArea() {
   // ─────────────────────────────────────────────────────────────
   const submitCertification = async (e) => {
     e.preventDefault();
-    setApiMsg(null);
     try {
       const res  = await authFetch(`training_api.php?action=add_certification`, {
         method: "POST",
@@ -287,7 +274,7 @@ function TrainingContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Certification added", "success", json.message);
         setCertificationForm({
           employee_id: "",
           certification_name: "",
@@ -297,10 +284,10 @@ function TrainingContentArea() {
         });
         loadCertifications();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not add certification", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -310,8 +297,6 @@ function TrainingContentArea() {
   const deleteItem = async (type, idField, idValue) => {
     const ok = await confirm("Are you sure you want to delete this record?");
     if (!ok) return;
-    setApiMsg(null);
-    // ...rest unchanged
     try {
       const res  = await authFetch(`training_api.php?action=delete_${type}`, {
         method: "POST",
@@ -319,16 +304,16 @@ function TrainingContentArea() {
       });
       const json = await res.json();
       if (json.status === "success") {
-        setApiMsg({ type: "success", text: json.message });
+        showToast("Record deleted", "success", json.message);
         if (type === "course")        loadCourses();
         if (type === "session")       loadSessions();
         if (type === "enrollment")    loadEnrollments();
         if (type === "certification") loadCertifications();
       } else {
-        setApiMsg({ type: "error", text: json.message });
+        showToast("Could not delete record", "error", json.message);
       }
     } catch {
-      setApiMsg({ type: "error", text: "Could not reach server." });
+      showToast("Could not reach server", "error");
     }
   };
 
@@ -336,7 +321,6 @@ function TrainingContentArea() {
   // Generate Report CSV
   // ─────────────────────────────────────────────────────────────
   const generateReport = async () => {
-    setApiMsg(null);
     try {
       const p   = new URLSearchParams({
         action: "generate_report",
@@ -354,9 +338,9 @@ function TrainingContentArea() {
       a.download = `training_${reportType}_${fromDate}_to_${toDate}.csv`;
       a.click();
       window.URL.revokeObjectURL(url);
-      setApiMsg({ type: "success", text: "Report downloaded." });
+      showToast("Report downloaded", "success");
     } catch {
-      setApiMsg({ type: "error", text: "Failed to generate report." });
+      showToast("Failed to generate report", "error");
     }
   };
 
@@ -370,8 +354,6 @@ function TrainingContentArea() {
           <div className="tab-content">
             <h2>Courses</h2>
             <p>Create and manage training courses.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form onSubmit={submitCourse} className="training-form">
               <label>Title *</label>
@@ -478,8 +460,6 @@ function TrainingContentArea() {
           <div className="tab-content">
             <h2>Sessions</h2>
             <p>Schedule training sessions for existing courses.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form className="training-form" onSubmit={submitSession}>
               <label>Course *</label>
@@ -593,8 +573,6 @@ function TrainingContentArea() {
             <h2>Enrollments</h2>
             <p>Enroll employees into scheduled training sessions.</p>
 
-            <ApiMsg msg={apiMsg} />
-
             <form className="training-form" onSubmit={submitEnrollment}>
               <label>Employee *</label>
               <select
@@ -694,8 +672,6 @@ function TrainingContentArea() {
           <div className="tab-content">
             <h2>Certifications</h2>
             <p>Track employee certifications earned through training.</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form className="training-form" onSubmit={submitCertification}>
               <label>Employee *</label>
@@ -806,8 +782,6 @@ function TrainingContentArea() {
           <div className="tab-content">
             <h2>Reports</h2>
             <p>Generate training reports (CSV download).</p>
-
-            <ApiMsg msg={apiMsg} />
 
             <form className="training-form" onSubmit={(e) => e.preventDefault()}>
               <label>Report Type</label>

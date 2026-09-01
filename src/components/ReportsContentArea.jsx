@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useToast } from './useToast';
 import '../css_components/ContentArea.css'; // Reuse or copy the CSS file
 
 function ReportsContentArea() {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab] = useState('hrOverview');
 
   // State for report generation form
@@ -20,9 +22,13 @@ function ReportsContentArea() {
   };
 
   const handleGenerateReport = () => {
+    if (!reportForm.type || !reportForm.startDate || !reportForm.endDate) {
+      showToast('Missing report parameters', 'warning', 'Select a report type and date range before generating.');
+      return;
+    }
     // Simulate report generation
     setReportPreview(`Generated ${reportForm.type} report from ${reportForm.startDate} to ${reportForm.endDate}.`);
-    alert('Report generated!');
+    showToast('Report generated', 'success');
   };
 
   const renderContent = () => {
@@ -67,8 +73,8 @@ function ReportsContentArea() {
               {reportPreview ? <p>{reportPreview}</p> : <p>Report preview will appear here.</p>}
             </div>
             <div className="export-options">
-              <button>Export PDF</button>
-              <button>Export CSV</button>
+              <button onClick={() => showToast('PDF export coming soon', 'info')}>Export PDF</button>
+              <button onClick={() => showToast('CSV export coming soon', 'info')}>Export CSV</button>
             </div>
           </div>
         );
@@ -112,8 +118,8 @@ function ReportsContentArea() {
               {reportPreview ? <p>{reportPreview}</p> : <p>Report preview will appear here.</p>}
             </div>
             <div className="export-options">
-              <button>Export PDF</button>
-              <button>Export CSV</button>
+              <button onClick={() => showToast('PDF export coming soon', 'info')}>Export PDF</button>
+              <button onClick={() => showToast('CSV export coming soon', 'info')}>Export CSV</button>
             </div>
           </div>
         );
@@ -157,8 +163,8 @@ function ReportsContentArea() {
               {reportPreview ? <p>{reportPreview}</p> : <p>Report preview will appear here.</p>}
             </div>
             <div className="export-options">
-              <button>Export PDF</button>
-              <button>Export CSV</button>
+              <button onClick={() => showToast('PDF export coming soon', 'info')}>Export PDF</button>
+              <button onClick={() => showToast('CSV export coming soon', 'info')}>Export CSV</button>
             </div>
           </div>
         );
@@ -202,8 +208,8 @@ function ReportsContentArea() {
               {reportPreview ? <p>{reportPreview}</p> : <p>Report preview will appear here.</p>}
             </div>
             <div className="export-options">
-              <button>Export PDF</button>
-              <button>Export CSV</button>
+              <button onClick={() => showToast('PDF export coming soon', 'info')}>Export PDF</button>
+              <button onClick={() => showToast('CSV export coming soon', 'info')}>Export CSV</button>
             </div>
           </div>
         );
@@ -245,8 +251,8 @@ function ReportsContentArea() {
               {reportPreview ? <p>{reportPreview}</p> : <p>Report preview will appear here.</p>}
             </div>
             <div className="export-options">
-              <button>Export PDF</button>
-              <button>Export CSV</button>
+              <button onClick={() => showToast('PDF export coming soon', 'info')}>Export PDF</button>
+              <button onClick={() => showToast('CSV export coming soon', 'info')}>Export CSV</button>
             </div>
           </div>
         );
