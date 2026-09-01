@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../css_components/NewEmployeeForm.css';
 import { authFetch } from '../auth';
+import { useToast } from './useToast';
 
 // ─── CONFIG ───────────────────────────────────────────────────────────────────
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -43,6 +44,80 @@ const INITIAL_FORM = {
   tinNo: '', gsisNo: '', philhealthNo: '', pagibigNo: '',
   salaryGrade: '', stepIncrement: '', appointmentType: '',
 };
+
+// ── add_employee.php's own field names → form field names ──────────────────────
+// add_employee.php's response never keys errors by field — it sends a flat
+// "fields" array (missing required fields, exact API key names) and a flat
+// "errors" array (free-text validation messages, e.g. "salaryGrade must be
+// between 1 and 33"). This maps API field names to our form field keys, and
+// pulls the API field name back out of each free-text message so it can still
+// be attached to the right input.
+const API_TO_FORM_FIELD = {
+  lastName: 'lastName',
+  firstName: 'firstName',
+  middleName: 'middleName',
+  suffix: 'suffix',
+  sex: 'sex',
+  birthDate: 'startDate',   // form reuses startDate as birthDate in the payload
+  dateHired: 'startDate',   // ...and as dateHired too
+  civilStatus: 'civilStatus',
+  contactNumber: 'phone',
+  email: 'email',
+  tinNo: 'tinNo',
+  gsisNo: 'gsisNo',
+  philhealthNo: 'philhealthNo',
+  pagibigNo: 'pagibigNo',
+  department: 'department',
+  section: 'section',
+  positionTitle: 'position',
+  salaryGrade: 'salaryGrade',
+  stepIncrement: 'stepIncrement',
+  monthlySalary: 'salary',
+  appointmentType: 'appointmentType',
+};
+
+// Longest keys first, so "salaryGrade" is tried before any shorter/looser match.
+const API_FIELD_NAMES = Object.keys(API_TO_FORM_FIELD).sort((a, b) => b.length - a.length);
+
+// "Invalid email address" doesn't literally contain "email" as an API key,
+// so a few messages need an explicit override rather than name-matching.
+const MESSAGE_OVERRIDES = [
+  { test: /email address/i, field: 'email' },
+  { test: /^sex must be/i, field: 'sex' },
+  { test: /invalid civilStatus/i, field: 'civilStatus' },
+  { test: /invalid appointmentType/i, field: 'appointmentType' },
+  { test: /department not found/i, field: 'department' },
+];
+
+// Turn the "fields" array (missing required fields) into { formField: message }
+function mapMissingFields(fieldNames) {
+  const mapped = {};
+  for (const apiField of fieldNames || []) {
+    const formKey = API_TO_FORM_FIELD[apiField] ?? apiField;
+    mapped[formKey] = 'Required';
+  }
+  return mapped;
+}
+
+// Turn the "errors" array (free-text validation messages) into
+// { formField: message }, plus a leftover list for anything that couldn't
+// be matched to a specific field (shown via toast instead).
+function mapValidationMessages(messages) {
+  const mapped = {};
+  const unmatched = [];
+  for (const msg of messages || []) {
+    const override = MESSAGE_OVERRIDES.find(o => o.test.test(msg));
+    const apiField = override?.field
+      ?? API_FIELD_NAMES.find(name => new RegExp(`\\b${name}\\b`, 'i').test(msg));
+    if (apiField) {
+      const formKey = API_TO_FORM_FIELD[apiField] ?? apiField;
+      mapped[formKey] = msg;
+    } else {
+      unmatched.push(msg);
+    }
+  }
+  return { mapped, unmatched };
+}
 
 // ─── Normalize a cell value — converts Date objects → YYYY-MM-DD ─────────────
 function normalizeCell(val) {
@@ -127,11 +202,11 @@ function formatBytes(b) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 function NewEmployeeForm({ isOpen, onClose }) {
+  const { showToast } = useToast();
   const [activeTab, setActiveTab]   = useState('form');
   const [formData, setFormData]     = useState(INITIAL_FORM);
   const [errors, setErrors]         = useState({});
   const [submitting, setSubmitting] = useState(false);
-  const [apiMessage, setApiMessage] = useState(null); // { type: 'success'|'error', text }
 
   // Import state
   const [dragOver, setDragOver]           = useState(false);
@@ -155,7 +230,6 @@ function NewEmployeeForm({ isOpen, onClose }) {
     setFormData(INITIAL_FORM);
     setErrors({});
     setActiveTab('form');
-    setApiMessage(null);
     setImportFile(null);
     setImportData(null);
     setImportError('');
@@ -212,11 +286,11 @@ function NewEmployeeForm({ isOpen, onClose }) {
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      showToast('Please fix the highlighted fields', 'warning');
       return;
     }
 
     setSubmitting(true);
-    setApiMessage(null);
 
     // Map original field names → API field names
     const payload = {
@@ -251,18 +325,33 @@ function NewEmployeeForm({ isOpen, onClose }) {
       const json = await res.json();
 
       if (res.ok && json.status === 'success') {
-        setApiMessage({
-          type: 'success',
-          text: `Employee added! ID: ${json.employee_id}`,
-        });
+        showToast('Employee added', 'success', `ID: ${json.employee_id}`);
         setFormData(INITIAL_FORM);
         setErrors({});
-        setTimeout(onClose, 1800);
+        setTimeout(onClose, 1200);
+      } else if (Array.isArray(json.fields) && json.fields.length > 0) {
+        // "Missing required fields" — json.fields is a list of API field names.
+        setErrors(prev => ({ ...prev, ...mapMissingFields(json.fields) }));
+        showToast('Missing required fields', 'warning', 'Please fill in the highlighted fields.');
+      } else if (Array.isArray(json.errors) && json.errors.length > 0) {
+        // "Validation failed" — json.errors is a list of free-text messages;
+        // attach each to its field where we can identify one.
+        const { mapped, unmatched } = mapValidationMessages(json.errors);
+        if (Object.keys(mapped).length > 0) setErrors(prev => ({ ...prev, ...mapped }));
+        showToast(
+          'Could not add employee',
+          'error',
+          unmatched.length ? unmatched.join(' ') : 'Please check the highlighted fields.'
+        );
       } else {
-        setApiMessage({ type: 'error', text: json.message || 'An error occurred.' });
+        // Single-message errors: department not found, duplicate record, 500, etc.
+        if (/department not found/i.test(json.message ?? '')) {
+          setErrors(prev => ({ ...prev, department: json.message }));
+        }
+        showToast('Could not add employee', 'error', json.message || 'An error occurred.');
       }
     } catch {
-      setApiMessage({ type: 'error', text: 'Could not reach the server. Is PHP running?' });
+      showToast('Could not reach server', 'error', 'Is PHP running?');
     } finally {
       setSubmitting(false);
     }
@@ -313,7 +402,6 @@ function NewEmployeeForm({ isOpen, onClose }) {
     setImporting(true);
     setImportProgress(10);
     setSkippedRows([]);
-    setApiMessage(null);
 
     const ticker = setInterval(() => {
       setImportProgress(p => (p < 85 ? p + 5 : p));
@@ -331,19 +419,22 @@ function NewEmployeeForm({ isOpen, onClose }) {
       if (res.ok && json.status === 'success') {
         const skipped = json.skipped_details || [];
         setSkippedRows(skipped);
-        setApiMessage({
-          type: skipped.length ? 'warning' : 'success',
-          text: skipped.length
-            ? `${json.inserted} imported, ${json.skipped} skipped — see details below.`
-            : `${json.inserted} employee(s) imported successfully!`,
-        });
-        if (!skipped.length) setTimeout(onClose, 2000);
+        if (skipped.length) {
+          showToast(
+            `${json.inserted} imported, ${json.skipped} skipped`,
+            'warning',
+            'See details below.'
+          );
+        } else {
+          showToast('Import successful', 'success', `${json.inserted} employee(s) imported.`);
+          setTimeout(onClose, 1500);
+        }
       } else {
-        setApiMessage({ type: 'error', text: json.message || 'Import failed.' });
+        showToast('Import failed', 'error', json.message);
       }
     } catch {
       clearInterval(ticker);
-      setApiMessage({ type: 'error', text: 'Could not reach the server. Is PHP running?' });
+      showToast('Could not reach server', 'error', 'Is PHP running?');
     } finally {
       setImporting(false);
       setTimeout(() => setImportProgress(0), 600);
@@ -355,7 +446,6 @@ function NewEmployeeForm({ isOpen, onClose }) {
     setImportData(null);
     setImportError('');
     setSkippedRows([]);
-    setApiMessage(null);
   };
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -388,16 +478,6 @@ function NewEmployeeForm({ isOpen, onClose }) {
             📊 Import File
           </button>
         </div>
-
-        {/* ── API feedback banner ── */}
-        {apiMessage && (
-          <div className={`api-message api-message--${apiMessage.type}`}>
-            {apiMessage.type === 'success' && '✅ '}
-            {apiMessage.type === 'error'   && '❌ '}
-            {apiMessage.type === 'warning' && '⚠️ '}
-            {apiMessage.text}
-          </div>
-        )}
 
         {/* ══════════════════════════════════════════════
             TAB 1 — MANUAL ENTRY FORM
@@ -623,6 +703,7 @@ function NewEmployeeForm({ isOpen, onClose }) {
                     min="1" max="33" value={formData.salaryGrade} onChange={handleChange}
                     placeholder="e.g. 18"
                   />
+                  {errors.salaryGrade && <span className="error">{errors.salaryGrade}</span>}
                 </div>
 
                 <div className="form-group">
@@ -632,6 +713,7 @@ function NewEmployeeForm({ isOpen, onClose }) {
                     min="1" max="8" value={formData.stepIncrement} onChange={handleChange}
                     placeholder="1"
                   />
+                  {errors.stepIncrement && <span className="error">{errors.stepIncrement}</span>}
                 </div>
               </div>
 

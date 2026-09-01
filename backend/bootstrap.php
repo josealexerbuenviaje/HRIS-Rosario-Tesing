@@ -40,3 +40,19 @@ require_once __DIR__ . '/jwt_helper.php';
 
 // ── Enable mysqli exceptions so every failed query throws ────────────────────
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+// ============================================================
+//  SHARED ERROR RESPONSE HELPER
+//  Usage: sendError(422, "Validation failed", ["errors" => $errors]);
+//  Sends the HTTP status code, merges any extra data into the JSON
+//  body alongside status/message, and stops execution.
+// ============================================================
+function sendError(int $code, string $message, array $extra = []): void
+{
+    http_response_code($code);
+    echo json_encode(array_merge(
+        ["status" => "error", "message" => $message],
+        $extra
+    ));
+    exit;
+}
