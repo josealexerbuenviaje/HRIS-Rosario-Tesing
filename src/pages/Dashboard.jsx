@@ -56,6 +56,13 @@ const TOMORROWS_ACTIVITIES = [
   { type: "Onboarding", person: "Aldrin Manalo", detail: "New hire, Treasury", time: "8:00 AM" },
 ];
 
+const JOB_ORDERS = [
+  { no: "JO-2026-0142", details: "Repair of aircon unit, 2nd floor Records Section", issuedTo: "General Services Office", date: "Sep 1, 2026" },
+  { no: "JO-2026-0141", details: "Supply of bond paper and ink for Treasury printers", issuedTo: "Supply Office", date: "Aug 29, 2026" },
+  { no: "JO-2026-0140", details: "Electrical inspection, Barangay Health Center annex", issuedTo: "Engineering Office", date: "Aug 28, 2026" },
+  { no: "JO-2026-0139", details: "Vehicle maintenance, service truck plate ABC-1234", issuedTo: "Motor Pool", date: "Aug 27, 2026" },
+];
+
 // ─────────────────────────────────────────────────────────────────────────────
 
 export default function Dashboard() {
@@ -273,6 +280,33 @@ export default function Dashboard() {
                     <span className="activity-row__time">{a.time}</span>
                   </div>
                 ))}
+              </div>
+            </section>
+
+            {/* Job orders */}
+            <section className="panel">
+              <h2 className="panel__title">Job orders</h2>
+              <div className="jo-table-wrap">
+                <table className="jo-table">
+                  <thead>
+                    <tr>
+                      <th>JO no.</th>
+                      <th>Details</th>
+                      <th>Issued to</th>
+                      <th>Date issued</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {JOB_ORDERS.map((jo) => (
+                      <tr key={jo.no}>
+                        <td className="jo-table__no">{jo.no}</td>
+                        <td>{jo.details}</td>
+                        <td>{jo.issuedTo}</td>
+                        <td className="jo-table__date">{jo.date}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </section>
           </div>

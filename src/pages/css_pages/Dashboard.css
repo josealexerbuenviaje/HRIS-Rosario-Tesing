@@ -431,6 +431,47 @@
 .activity-row__detail { margin: 0.1rem 0 0; font-size: 0.75rem; color: var(--ink-soft); }
 .activity-row__time { flex-shrink: 0; font-size: 0.74rem; color: var(--ink-faint); white-space: nowrap; }
 
+/* ── Job orders table ── */
+.jo-table-wrap {
+  overflow-x: auto;
+}
+
+.jo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.jo-table thead th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--ink-soft);
+  padding: 0 0 0.5rem;
+  border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+
+.jo-table tbody td {
+  padding: 0.6rem 0.6rem 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  color: var(--ink);
+}
+
+.jo-table tbody tr:last-child td { border-bottom: none; }
+
+.jo-table__no {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: var(--green-900);
+  white-space: nowrap;
+}
+
+.jo-table__date {
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
 /* ── Responsive ── */
 @media (max-width: 980px) {
   .registry-body { grid-template-columns: 1fr; }
@@ -445,6 +486,7 @@
   .registry-main { padding: 1.25rem 1rem 2rem; }
   .stat-strip__item { flex: 1 1 100%; border-right: none; }
   .ledger-row { grid-template-columns: 76px 1fr 26px; }
+  .jo-table { font-size: 0.72rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
